@@ -1,0 +1,429 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+    previewFeatures = ["jsonProtocol"]
+}
+
+datasource db {
+    provider = "postgresql"
+    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
+    // Further reading:
+    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
+    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
+    url      = env("DATABASE_URL")
+}
+
+// generator trpc {
+//   provider          = "prisma-trpc-generator"
+//   withZod           = true
+//   withMiddleware    = false
+//   withShield        = false
+//   contextPath       = "../src/context"
+//   trpcOptionsPath   = "../src/trpcOptions"
+// }
+
+model Example {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// Necessary for Next auth
+model Account {
+    id                String  @id @default(cuid())
+    userId            String
+    type              String
+    provider          String
+    providerAccountId String
+    refresh_token     String? // @db.Text
+    access_token      String? // @db.Text
+    expires_at        Int?
+    token_type        String?
+    scope             String?
+    id_token          String? // @db.Text
+    session_state     String?
+    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([provider, providerAccountId])
+}
+
+model Session {
+    id           String   @id @default(cuid())
+    sessionToken String   @unique
+    userId       String
+    expires      DateTime
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+    identifier String
+    token      String   @unique
+    expires    DateTime
+
+    @@unique([identifier, token])
+}
+
+model User {
+    id            String    @id @default(cuid())
+    sessionId     String    @default(cuid())
+    fullName      String    @default("")
+    username      String    @default("") //@unique
+    email         String   @unique
+    emailVerified DateTime?
+    isVerified     Boolean  @default(false)
+    password      String    @default("")
+    gettingStart  String @db.VarChar(1) @default("1")
+    gender        String @db.VarChar(1) @default("")
+    contentLanguage String @db.VarChar(2) @default("en")
+    userImageId Int?  @unique   // This is the foreign key to the user's image
+    image  Image?    @relation("userImage", fields: [userImageId], references: [id])
+    userCoverId Int?     @unique  // This is the foreign key to the user's cover image
+    coverImage  Image?    @relation("userCover", fields: [userCoverId], references: [id])
+    interestedTopics String[]
+    bio           String?
+    livingLocation String?
+    fromLocation   String?
+    status         String?
+    isPrivate      Boolean @default(false)
+    phoneNo        String? @db.VarChar(20)
+    phoneNoCode    String? @db.VarChar(3)
+    createdAt      DateTime @default(now())
+    lastUpdate     DateTime @updatedAt
+    score          Int      @default(0)
+    postList        Post[]  @relation("postUserAccountAuthor")
+    holdingPostList        Post[] @relation("postUserAccountHolder")
+    holdingSharedPostList    SharedPost[] @relation("sharedPostUserAccountHolder")
+    sharedPostList      SharedPost[]    @relation("sharedPostUserAccountAuthor")
+    commentList     Comment[] @relation("commentUserAuthor")
+    likeCommentList Comment[] @relation("commentUserSubject")
+    replayList Replay[] @relation("userReplayLike")
+    writtenReplayList Replay[] @relation("userReplayLikeOwner")
+    mediaList   Media[]
+    pageList    Page[]
+    storiesList Story[] @relation("userStoryAuthor")
+    likedStoriesList Story[] @relation("userStoryLike")
+    messageList Message[] 
+    conversationList Conversation[] 
+    notificationList    Notification[] @relation("notificationUserAuthor")
+    recievedNotificationList    Notification[] @relation("notificationUserReciever")
+    eventList   Event[] @relation("userEventAuthor")
+    goingEventList Event[]  @relation("eventUserGoingList")
+    interestedList Event[]  @relation("eventUserInterestedList")
+    bookmarkList    Bookmark[]
+    groupList   Group[]
+    inGroupList Group[] @relation("groupUserMember")
+    appliedGroupList    GetInGroupRequest[]
+    requestHiddenPost   HiddenPost[]
+    likePageList    PageLike[]
+    isChatBillOn   Boolean @default(false)
+    accounts      Account[]
+    sessions      Session[]
+    likedPosts  Post[]
+    sendedFriendRequestList AddFriendRequest[] @relation("SentFriendRequests")
+    receiveredFriendRequestList AddFriendRequest[] @relation("ReceivedFriendRequests")
+    postMentionedIn MentionList[]
+    friendships1 Friendship[] @relation("Friendship1")
+    friendships2 Friendship[] @relation("Friendship2")
+}
+
+model Friendship {
+  id        Int     @id @default(autoincrement())
+  user1Id   String
+  user1     User    @relation("Friendship1",fields: [user1Id], references: [id])
+  user2Id   String
+  user2     User    @relation("Friendship2",fields: [user2Id], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model AddFriendRequest {
+  id        Int       @id @default(autoincrement())
+  senderId  String
+  sender    User      @relation("SentFriendRequests", fields: [senderId], references: [id])
+  receiverId String
+  receiver  User      @relation("ReceivedFriendRequests", fields: [receiverId], references: [id])
+  status    String    @default("pending")// You can use an enum or string values to represent the status of the request (pending, accepted, declined, etc.)
+  createdAt DateTime  @default(now())
+}
+
+
+model Post {
+    id  String @id @unique @default(cuid())
+    userAuthorId  String?
+    pageAuthorId  String?
+    userAuthor   User? @relation("postUserAccountAuthor",fields: [userAuthorId],references: [id],map: "postUser_fk")
+    pageAuthor   Page? @relation("postPageAuthor",fields: [pageAuthorId],references: [id],map: "postPage_fk")
+    content  String
+    mentionListId   Int? @unique
+    mentionList MentionList? @relation(fields: [mentionListId],references: [id])
+    checkIn CheckIn?
+    mediaList Media[]
+    feeling  String? @db.VarChar(20)
+    whoCanSee   String @default("all")
+    likeList    User[]
+    sharedList SharedPost[] 
+    commentList    Comment[]
+    bookMarkList    Bookmark[]
+    accountHolderId String?
+    groupHolderId String?
+    accountHolder  User? @relation("postUserAccountHolder",fields: [accountHolderId],references: [id],map: "postUserAccountHolder_fk")
+    groupHolder  Group? @relation("postGroupAccountHolder",fields: [groupHolderId],references: [id],map: "postGroupAccountHolder_fk")
+    createdAt      DateTime @default(now())
+    lastUpdate     DateTime @updatedAt
+    requestHiddenUserList HiddenPost[]
+}
+
+model MentionList {
+    id Int @id @default(autoincrement())
+    post    Post?
+    userList    User[]
+    createdAt      DateTime @default(now())
+}
+
+model HiddenPost {
+    id  String @unique @default(cuid())
+    ownerId  String
+    owner   User @relation(fields: [ownerId],references: [id])
+    reason  String?
+    postId  String 
+    post        Post @relation(fields: [postId],references: [id])  
+    createdAt      DateTime @default(now())
+
+}
+
+model SharedPost {
+    id  String @unique @default(cuid())
+    authorId  String
+    author   User @relation("sharedPostUserAccountAuthor",fields: [authorId],references: [id])
+    postId  String
+    post        Post @relation(fields: [postId],references: [id])
+    // mentionList
+    feeling  String? @db.VarChar(20)
+    whoCanSee   String @default("all")
+    // likeList
+    // commentList
+    accountHolderId String
+    accountHolder  User @relation("sharedPostUserAccountHolder",fields: [accountHolderId],references: [id])
+    createdAt      DateTime @default(now())
+    lastUpdate     DateTime @updatedAt
+
+}
+
+model Image {
+  id          Int       @id @default(autoincrement())
+  userImage User? @relation("userImage")
+  userCoverImage User? @relation("userCover")
+//   userImageId String?    @unique
+//   userImageCoverId String?    @unique 
+  ownerId     String?    //@unique         // Remove @unique here
+//   userImage   User?     @relation("imageToUserImage", fields: [userImageId], references: [id], map: "imageToUserImage_fk")
+//   userCover   User?     @relation("imageToUserCover", fields: [userImageCoverId], references: [id], map: "imageToUserCover_fk")
+//   post        Post?     @relation("imageToPostCover", fields: [ownerId], references: [id], map: "imageToPostCover_fk")
+  eventId String?
+  eventCover  Event?    @relation("imageToEventCover")
+  pageId    String?
+  pageCover   Page?     @relation("imageToPageCover")
+  pageProfileId String?
+  pageProfile Page?     @relation("imageToPageProfile")
+  groupId    String?
+  groupCover   Group?     @relation("imageToGroupCover")
+  groupProfileId String?
+  groupProfile Group?     @relation("imageToGroupProfile")
+  url         String
+  path        String
+  createdat   DateTime  @default(now())
+
+    // coverImage  Image? @relation("imageToPageCover",fields: [coverImageId],references: [id])
+    // profileImageId  Int?
+    // profileImage    Image? @relation("imageToPageProfile",fields: [profileImageId],references: [id])
+
+    // id  Int @unique @default(autoincrement())
+    // ownerId String @unique
+    // userImage User? @relation("imageToUserImage",fields: [ownerId],references: [id],map:"imageToUserImage_fk")
+    // userCover User? @relation("imageToUserCover",fields: [ownerId],references: [id],map:"imageToUserCover_fk")
+    // post Post? @relation("imageToPostCover",fields: [ownerId],references: [id],map: "imageToPostCover_fk")
+    // // group
+    // eventCover  Event? @relation("imageToEventCover",fields: [ownerId],references: [id],map: "imageToEventCover_fk")
+    // pageCover Page? @relation("imageToPageCover",fields: [ownerId],references: [id],map: "imageToPageCover___fk")
+    // pageProfile Page? @relation("imageToPageProfile",fields: [ownerId],references: [id],map: "imageToPageProfile_fk")
+    // url     String
+    // path  String
+    // createdat DateTime @default(now())
+}
+
+model Comment {
+    id  String @id @unique @default(cuid())
+    postId  String
+    post    Post @relation(fields: [postId],references: [id])
+    authorId String
+    author User @relation("commentUserAuthor",fields: [authorId],references: [id])
+    content String
+    LikeList User[] @relation("commentUserSubject")
+    replayList  Replay[]
+    createdAt DateTime @default(now())
+}
+
+model Replay{
+    id  String @id @unique @default(cuid())
+    commentId  String
+    comment    Comment @relation(fields: [commentId],references: [id])
+    authorId   String
+    author      User @relation("userReplayLikeOwner",fields: [authorId],references: [id])
+    content     String
+    likeList    User[] @relation("userReplayLike")
+    createdat DateTime @default(now())
+}
+
+model CheckIn {
+    id  String @id @unique @default(cuid())
+    postId String   @unique
+    post Post @relation(fields: [postId],references: [id])
+    location String
+    createdAt DateTime @default(now())
+}
+
+model PageLike {
+    id  String @id @unique @default(cuid())
+    userId  String
+    user    User @relation(fields: [userId],references: [id])
+    pageId  String
+    page    Page @relation(fields: [pageId],references: [id])
+}
+
+model Page {
+    id  String @id @unique @default(cuid())
+    identifier String @unique
+    ownerId String
+    owner   User @relation(fields: [ownerId],references: [id])
+    title   String
+    coverImageId    Int? @unique
+    coverImage  Image? @relation("imageToPageCover",fields: [coverImageId],references: [id])
+    profileImageId  Int? @unique
+    profileImage    Image? @relation("imageToPageProfile",fields: [profileImageId],references: [id])
+    about   String?
+    category    String?
+    messageList Message[]
+    contactList Contact[]
+    postList Post[] @relation("postPageAuthor")
+    createdAt DateTime @default(now())
+    score Int @default(0)
+    likes   PageLike[]
+}
+
+model Media {
+    id  String @id @unique @default(cuid())
+    postId String?
+    post Post? @relation(fields: [postId],references: [id])
+    storyId String? @unique
+    story Story? @relation(fields: [storyId],references: [id])
+    url         String
+    path    String
+    createdAt DateTime @default(now())
+    ownerId    String
+    owner      User @relation(fields: [ownerId],references: [id])
+}
+
+model Story {
+    id  String @id @unique @default(cuid()) 
+    media Media ?
+    ownerId   String
+    owner   User @relation("userStoryAuthor",fields: [ownerId],references: [id])
+    createdAt DateTime @default(now())
+    lastUpdate DateTime @updatedAt
+    likeList    User[] @relation("userStoryLike")
+}
+
+model Contact {
+    id  String @id @unique @default(cuid()) 
+    pageId  String
+    page    Page @relation(fields: [pageId],references: [id])
+    name    String
+    value   String
+    createdAt DateTime @default(now())
+}
+
+model Conversation {
+    id  String @id @unique @default(cuid()) 
+    users   User[]
+    messageList Message[]
+    createdAt DateTime @default(now())
+}
+
+model Message {
+    id  Int @id @unique @default(autoincrement())
+    sendId String
+    userSender User? @relation(fields: [sendId],references: [id],map: "messageUser_fk")
+    pageSender Page? @relation(fields: [sendId],references: [id],map: "messagePage_fk")
+    conversationId  String
+    conversation    Conversation @relation(fields: [conversationId],references: [id])
+    content String
+    createdAt DateTime @default(now())
+}
+
+model Notification {
+    id  Int @id @unique @default(autoincrement())
+    senderId    String
+    sender User @relation("notificationUserAuthor",fields: [senderId],references: [id],map: "notificationUserSender_fk")
+    recieverId String
+    reciever User @relation("notificationUserReciever",fields: [recieverId],references: [id],map: "notificationUserReciever_fk")
+    content     String
+    link    String?
+    type    String?
+    message String?
+    status  String @default("unread")
+    createdAt DateTime @default(now())
+}
+
+model Event {
+    id  String @id @unique @default(cuid())
+    authorId    String
+    author  User @relation("userEventAuthor",fields: [authorId],references: [id])
+    description String
+    coverImageId Int? @unique
+    coverImage  Image? @relation("imageToEventCover",fields: [coverImageId],references: [id])
+    eventTime      DateTime
+    interestedList  User[]  @relation("eventUserInterestedList")
+    goingList   User[]   @relation("eventUserGoingList")
+    createdAt DateTime @default(now())
+}
+
+model Bookmark {
+    id  Int @id @unique @default(autoincrement())
+    postId  String
+    post    Post @relation(fields: [postId],references: [id])
+    ownerId String
+    owner   User @relation(fields: [ownerId],references: [id])
+    createdAt DateTime @default(now())
+}
+
+model Group {
+    id  String @id @unique @default(cuid())
+    title   String 
+    ownerId String
+    owner User @relation(fields: [ownerId],references: [id])
+    postList    Post[] @relation("postGroupAccountHolder")
+    coverImageId    Int? @unique
+    coverImage  Image? @relation("imageToGroupCover",fields: [coverImageId],references: [id])
+    profileImageId  Int? @unique
+    profileImage    Image? @relation("imageToGroupProfile",fields: [profileImageId],references: [id])
+    rules   String
+    location    String?
+    category    String
+    about   String?
+    score   Int @default(0)
+    isPrivate   Boolean
+    createdAt   DateTime @default(now())
+    groupMember User[]  @relation("groupUserMember")
+    getInRequest    GetInGroupRequest[]
+}
+
+model GetInGroupRequest {
+    id  Int @id @unique @default(autoincrement())
+    applierId String
+    applier User @relation(fields: [applierId],references: [id])
+    groupId String
+    group   Group @relation(fields: [groupId],references: [id])
+    isAccepted  Boolean?
+    createdAt   DateTime @default(now())
+}
