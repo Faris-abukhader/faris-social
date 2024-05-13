@@ -16,7 +16,7 @@ import { CheckIcon } from "lucide-react"
 import { api } from "@faris/utils/api"
 import Loading from "@faris/components/general/Loading"
 import { ScrollArea } from "@faris/components/ui/scroll-area"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import eventCategories from "@faris/utils/eventCategories"
 import ProfileUploader from "../gettingStart/ProfileUploader"
 import CoverUploader from "../gettingStart/CoverUploader"
@@ -26,6 +26,7 @@ import { Checkbox } from "../ui/checkbox"
 import { createNewGroupInitialValues } from "@faris/server/module/group/group.initial"
 import { modelStoreGenerator } from "zustandStore/modelStore"
 import { useToast } from "../ui/use-toast"
+import { safeParse } from "valibot"
 
 export const useGroupModel = modelStoreGenerator()
 
@@ -33,16 +34,19 @@ export default function CreateNewGroupModel() {
     const { show, setShow } = useGroupModel(state => state)
     const userSession = useSessionStore(state => state.user)
     const [dummy, setDummy] = useState(0)
+    const [isValid, setIsValid] = useState(false)
     const { t } = useTranslation()
     const {toast} = useToast()
     const { createGroup } = useGroupListStore(state => state)
 
+
     const methods = useForm({
         resolver: valibotResolver(createNewGroupSchema),
-        defaultValues: createNewGroupInitialValues as CreateNewGroup
+        defaultValues: createNewGroupInitialValues as CreateNewGroup,
     })
 
     const { getValues, setValue, register, formState: {  } } = methods
+
 
     const { mutate, isLoading } = api.group.createOne.useMutation({
         onSuccess(data) {
@@ -58,6 +62,15 @@ export default function CreateNewGroupModel() {
 
     const handleSubmit = () => mutate({ ...getValues(), ownerId: userSession.id })
 
+    useEffect(()=>{
+        userSession.id && setValue('ownerId',userSession.id)
+    },[userSession])
+    useEffect(()=>{
+        const result = safeParse(createNewGroupSchema,getValues())
+        setIsValid(result.success)
+        console.log(result)
+    },[getValues()])
+
     return (
         <Dialog open={show} onOpenChange={setShow}>
             <DialogContent className="p-5 sm:max-w-[500px] sm:max-h-[480px] overflow-y-auto">
@@ -65,8 +78,8 @@ export default function CreateNewGroupModel() {
                     <DialogTitle className=" capitalize">{t('createNewGroup')}</DialogTitle>
                 </DialogHeader>
                 <FormProvider {...methods}>
-                    <ProfileUploader setImage={(img) => { setValue('profileImage.url', img.url); setValue('profileImage.path', img.path) }} />
-                    <CoverUploader coverImage={getValues('coverImage.url')} setCoverImage={(img) => { setValue('coverImage.url', img.url); setValue('coverImage.path', img.path) }} />
+                    <ProfileUploader setImage={(img) => { setValue('profileImage.url', img.url); setValue('profileImage.path', img.path);setValue('profileImage.thumbnailUrl',img.thumbnailUrl) }} />
+                    <CoverUploader coverImage={getValues('coverImage.url')} setCoverImage={(img) => { setValue('coverImage.url', img.url); setValue('coverImage.path', img.path);setValue('coverImage.thumbnailUrl',img.thumbnailUrl) }} />
                     <section className=" space-y-3">
                         <Input placeholder={t('groupName')} {...register('title')} />
                         <Input placeholder={t('groupBio')} {...register('about')} />
@@ -96,7 +109,7 @@ export default function CreateNewGroupModel() {
                     </section>
                 </FormProvider>
                 <DialogFooter>
-                    <Button /*disabled={isValid}*/ onClick={handleSubmit}>{isLoading ? <Loading /> : t('createNewGroup')}</Button>
+                    <Button disabled={!isValid} onClick={handleSubmit}>{isLoading ? <Loading withText={true} /> : t('createNewGroup')}</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

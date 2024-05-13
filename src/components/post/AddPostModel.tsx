@@ -178,6 +178,7 @@ export function AddPostModel() {
 
     useEffect(()=>{
         const result = safeParse(createNewPostSchema,getValues())
+        // setDummy(dummy+1)
         setIsValid(result.success)
         console.log(result)
     },[getValues()])
@@ -264,7 +265,7 @@ export function AddPostModel() {
                             </div>
                         </ScrollArea>
                         <DialogFooter className="pt-4">
-                            <Button disabled={isGettingCityName || isGettingCoordinate || isLoading || isCreating || isPagePostLoading || !isValid} type="submit">{isLoading || isCreating || isPagePostLoading ? <Loading />:t('post')}</Button>
+                            <Button disabled={isGettingCityName || isGettingCoordinate || isLoading || isCreating || isPagePostLoading || !isValid} type="submit">{isLoading || isCreating || isPagePostLoading ? <Loading withText={true} />:t('post')}</Button>
                         </DialogFooter>
                     </form>
                 </FormProvider>

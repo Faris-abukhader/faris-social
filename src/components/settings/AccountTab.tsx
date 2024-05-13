@@ -17,6 +17,7 @@ import { updateProfileAccountSettingInitialValues } from "@faris/server/module/p
 import { useToast } from "../ui/use-toast"
 import useLocalizationStore from "zustandStore/localizationStore"
 import { changeLanguage } from "i18next"
+import { safeParse } from "valibot"
 
 const genderList = ['m'/* male */, 'f'/* female */]
 
@@ -27,6 +28,7 @@ export default function AccountTab() {
   const [dummy, setDummy] = useState(0)
   const { isReady, user } = useSessionStore(state => state)
   const { setLanguage } = useLocalizationStore(state => state)
+  const [isValid,setIsValid] = useState(false)
   const { mutate, isLoading } = api.profile.updateAccountSetting.useMutation({
     onSuccess() {
       toast({
@@ -38,7 +40,7 @@ export default function AccountTab() {
     },
   })
 
-  const { handleSubmit, setValue, getValues, reset, formState: { isValid } } = useForm({
+  const { handleSubmit, setValue, getValues, reset, formState: { } } = useForm({
     resolver: valibotResolver(updateProfileAccountSettingSchema),
     defaultValues: updateProfileAccountSettingInitialValues as UpdateProfileAccountSettingParams
   })
@@ -46,9 +48,21 @@ export default function AccountTab() {
   const submitHandler = (data: UpdateProfileAccountSettingParams) => mutate(data)
 
   useEffect(() => {
-    isReady && reset({ id: user.id, gender: user.gender, contentLanguage: user.contentLanguage, platformLanguage: user.platformLanguage, livingLocation: user.livingLocation ?? undefined })
+    console.log(user)
+    if(isReady){
+      setValue('id',user.id)
+      setValue('contentLanguage',user.contentLanguage??'en')
+      setValue('platformLanguage',user.platformLanguage??'en')
+      setValue('gender',user.gender??'m')
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isReady])
+
+  useEffect(()=>{
+    const result = safeParse(updateProfileAccountSettingSchema,getValues())
+    console.log(result)
+    setIsValid(result.success)
+  },[getValues()])
 
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises

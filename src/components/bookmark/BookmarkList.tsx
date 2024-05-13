@@ -32,7 +32,7 @@ const BookmarkList = () => {
   }, [data])
 
   return (
-      <div className='w-full max-w-lg- space-y-4 scrollbar-hide'>
+      <div className='w-full max-w-lg- space-y-4 scrollbar-hide py-12'>
          <ViewRender
           illustrations='posts'
           isGrid={false}
@@ -41,15 +41,15 @@ const BookmarkList = () => {
           skeletonComonent={<PostSkeleton/>}
           noDataMessage={'youDonotHaveAnyPostInBookmark'}
           nextPage={nextPage}
-          hasNextPage={totalPages-1 > currentPage}
-        >
-          <div className='py-3 space-y-2 pb-12'>
-          {postList.map((post, i) => post.type=='shared' ? 
-          <SharedPostCard key={i} isBookmark={true} bookmarkId={post.bookmarkId??-1} {...post as GetOneSharedPost}/>
-          :
-          <PostCard isBookmark={true} bookmarkId={post?.bookmarkId} {...post as GetOnePost} key={i} />) }
-          </div>
-        </ViewRender>
+          hasNextPage={totalPages-1 > currentPage}>
+            <div className='  space-y-4'>
+          {postList.map((post,i) => (
+            post.type=='shared' ? 
+            <SharedPostCard key={i} isBookmark={true} bookmarkId={post.bookmarkId??-1} {...post as GetOneSharedPost}/>
+            :
+            <PostCard isBookmark={true} bookmarkId={post?.bookmarkId} {...post as GetOnePost} key={i} />)
+          )}</div>
+          </ViewRender>
       </div>
   )
 }

@@ -29,7 +29,7 @@ const ProfileTab = ()=> {
     },
   })
 
-  const { handleSubmit, setValue,getValues,reset, register, formState: { isValid } } = useForm({
+  const { handleSubmit, setValue,getValues,reset, register, formState: { isValid,errors } } = useForm({
     resolver: valibotResolver(updateProfileSettingSchema),
     defaultValues: updateProfileSettingInitialValues as UpdateProfileSettingParams
   })
@@ -68,7 +68,7 @@ return (
         </div>
         <Switch checked={getValues('isVisiable')} onCheckedChange={(newValue)=>{setValue('isVisiable',newValue);setDummy(dummy+1)}}  />
       </div>
-      <Button disabled={isLoading || !isValid} type='submit'>{isLoading?<Loading/>:t('confirm')}</Button>
+      <Button disabled={isLoading} type='submit'>{isLoading?<Loading/>:t('confirm')}</Button>
     </form>
   )
 }
