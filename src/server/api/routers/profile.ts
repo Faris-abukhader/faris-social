@@ -87,7 +87,7 @@ export const profileRouter = router({
         }),
     setProfileOnline: protectedProcedure
         .input(i => parse(setProfileOnlineSchema, i))
-        .mutation(async ({ input }) => {
+        .mutation(async({ input }) => {
             const { profileId } = input
             await pusherServer.trigger(toPusherKey(`isOnline:${profileId}`), Events.IS_ONLINE, input)
         }),

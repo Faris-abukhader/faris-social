@@ -171,7 +171,7 @@ model Post {
     checkIn               CheckIn?
     mediaList             Media[]
     feeling               String?      @db.VarChar(20)
-    whoCanSee             String       @default("all")
+    whoCanSee             String       @default("public")
     likeList              User[]
     votingUp              User[]       @relation("userVotingGroupPostUp")
     votingDown            User[]       @relation("userVotingGroupPostDown")
@@ -382,6 +382,7 @@ model Media {
     story       Story?   @relation(fields: [storyId], references: [id])
     url         String
     path        String
+    thumbnailUrl   String   @default("")
     isToxic     Boolean     @default(false)
     createdAt   DateTime @default(now())
     ownerId     String?

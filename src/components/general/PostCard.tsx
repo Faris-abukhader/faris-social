@@ -1,6 +1,6 @@
 import { memo, useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
-import { BookmarkPlus, EyeOff, Globe, MessageSquare, MoreHorizontal, Share, ThumbsUp } from 'lucide-react'
+import { BookmarkPlus, EyeOff, Globe, MessageSquare, MoreHorizontal, Share, ThumbsUp, Trash2Icon, Users2 } from 'lucide-react'
 import { Button } from '../ui/button'
 import { type GetOnePost } from '@faris/server/module/post/post.handler'
 import { useTranslation } from 'next-i18next';
@@ -24,6 +24,7 @@ import { cn } from '@faris/utils/tailwindHelper'
 import { type TGetOneMiniGroup } from '@faris/server/module/group/group.handler'
 import { useToast } from '../ui/use-toast'
 import Media from './Media'
+import { Lock } from 'lucide-react'
 
 type PostCardProps = {
   className?: string
@@ -86,6 +87,15 @@ const PostCard = ({ id, type, className, userAuthor, pageAuthor, content, _count
     },
   })
 
+  const { mutate: deletePostMutation, isLoading: isDeleting } = api.post.deleteOne.useMutation({
+    onSuccess(data) {
+      deletePost(data.postId)
+      toast({
+        title: t('postDeletedSuccess')
+      })
+    },
+  })
+
   const seeFullPost = () => setPost({ id, type, userAuthor, pageAuthor, content, _count, createdAt, commentList, mentionList, whoCanSee, likeList: LikeList,hashtagList, mediaList, checkIn, feeling,language }, false)
 
   const sharePostHandler = () => {
@@ -123,14 +133,17 @@ const PostCard = ({ id, type, className, userAuthor, pageAuthor, content, _count
                     {feeling && <div className="text-xs opacity-75">{t('isFeeling')}{` ${feelingIcon} `}{t(feeling)}</div>}
                   </div>
                   <div className='flex items-center gap-x-2'>
-                    <span className='text-xs'>{fromNow(createdAt)}</span><Globe className='w-3 h-3' />
+                    <span className='text-xs'>{fromNow(createdAt)}</span>
+                    {whoCanSee =='onlyMe' && <Lock className='w-3 h-3' />}
+                    {whoCanSee =='public' && <Globe className='w-3 h-3' />}
+                    {whoCanSee =='friends' && <Users2 className='w-3 h-3' />}
                   </div>
                 </div>
               </div>
             }
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                {isAddingToBookmark || isRemovingToBookmark || isHidding ? <Loading /> : <Button variant={'ghost'}>
+                {isAddingToBookmark || isRemovingToBookmark || isHidding || isDeleting ? <Loading /> : <Button variant={'ghost'}>
                   <MoreHorizontal />
                 </Button>}
               </DropdownMenuTrigger>
@@ -139,10 +152,14 @@ const PostCard = ({ id, type, className, userAuthor, pageAuthor, content, _count
                   <BookmarkPlus className='w-4 h-4' />
                   <span>{isBookmark ? t('removeFromBookmark') : t('addToBookmark')}</span>
                 </DropdownMenuItem>
-                {userAuthor && userSession.id != userAuthor.id && <DropdownMenuItem className='hover:cursor-pointer gap-x-1' onClick={() => hidePost({ postId: id, ownerId: userSession.id })}>
+                {userAuthor && userSession.id != userAuthor.id ? <DropdownMenuItem className='hover:cursor-pointer gap-x-1' onClick={() => hidePost({ postId: id, ownerId: userSession.id })}>
                   <EyeOff className='w-4 h-4' />
                   <span>{t('hidePost')}</span>
-                </DropdownMenuItem>}
+                </DropdownMenuItem>:<DropdownMenuItem className='hover:cursor-pointer gap-x-1' onClick={() => deletePostMutation({ postId: id, userId: userSession.id })}>
+                  <Trash2Icon className='w-4 h-4' />
+                  <span>{t('delete')}</span>
+                </DropdownMenuItem>
+                }
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

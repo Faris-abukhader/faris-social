@@ -22,7 +22,11 @@ import { useToast } from "@faris/components/ui/use-toast";
 import useLocalizationStore from "zustandStore/localizationStore";
 
 
-export default function InviteFriendModel() {
+export default function InviteFriendModel({
+    placeHolder
+}:{
+    placeHolder?:string
+}) {
     const language = useLocalizationStore(state=>state.language)
     const { t } = useTranslation()
     const {toast} = useToast()
@@ -98,7 +102,7 @@ export default function InviteFriendModel() {
                     <DialogTitle className=" capitalize">{t('inviteFriends')}</DialogTitle>
                 </DialogHeader>
                 <section className=" space-y-3">
-                    <Input placeholder={t('pageName')} value={query} onChange={(e) => setQuery(e.target.value)} />
+                    <Input placeholder={placeHolder ? t(placeHolder):t('pageName')} value={query} onChange={(e) => setQuery(e.target.value)} />
                     <ViewRender
                         illustrations='friends'
                         isGrid={false}

@@ -471,5 +471,8 @@
     "secondsAgo":"a few seconds ago",
     "category":"category",
     "noDataFound":"no data was found.",
-    "addFriend":"add friend"
+    "addFriend":"add friend",
+    "goBack":"go back",
+    "removeEventFromCalenderSuccess":"Event was removed from calander successfully",
+    "postDeletedSuccess": "帖子已成功删除"
 }

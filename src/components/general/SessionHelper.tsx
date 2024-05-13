@@ -9,6 +9,11 @@ const SessionHelper = ()=> {
     const setLanguage = useLocalizationStore(state=>state.setLanguage)
     const [dummy,setDummy] = useState(0)
     const { mutate } = api.auth.getSession.useMutation({
+        onError(error) {
+            if(error){
+                setDummy(-1)
+            }
+        },
         onSuccess(data) {
             console.log(data)
             setSession(data)
@@ -17,6 +22,7 @@ const SessionHelper = ()=> {
     })
 
     useEffect(() => {
+        if(dummy==-1)return
         const incrementInterval = 500; // Increment every 500ms
 
         console.log('hello from session helper')
@@ -33,7 +39,7 @@ const SessionHelper = ()=> {
         clearInterval(interval);
         };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dummy]);
+  }, [dummy,isReady]);
 
 
     return <></>

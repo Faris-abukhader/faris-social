@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useTranslation } from "next-i18next";
 import Loading from "../general/Loading";
-import { parse } from "valibot";
+import { parse, safeParse } from "valibot";
 import ReCAPTCHA from "react-google-recaptcha";
 import { env } from "@faris/env.mjs";
 import { Password } from "../ui/password";
@@ -49,12 +49,13 @@ export default function SignInForm() {
   const [disabled, setDisabled] = useState(true);
 
   useEffect(() => {
-    try {
-      parse(signInSchema, credentials);
-      setDisabled(false);
-    } catch {
-      setDisabled(true);
-    }
+
+    const result = safeParse(signInSchema,credentials)
+
+    setDisabled(!result.success)
+
+    console.log(result)
+    
   }, [credentials]);
 
   return (
@@ -96,7 +97,7 @@ export default function SignInForm() {
           <h3 className="text-center">{t("doNotHaveAccount")}</h3>
           <Link
             className="text-center font-bold underline transition-all duration-300 hover:scale-105"
-            href={`/sign-up`}
+            href={`/auth/sign-up`}
           >
             {t("signUp")}
           </Link>

@@ -44,7 +44,7 @@ export function CreateNewEventModel() {
 
     const {mutate,isLoading} = api.event.createNew.useMutation({
         onSuccess(data) {
-            if(target=='yourEvent')createEvent(data)
+            target=='yourEvent' &&createEvent(data)
             toast({
                 title:t('newEventWasCreatedSuccessfully')
               })
@@ -53,6 +53,7 @@ export function CreateNewEventModel() {
             setShow(false)
         }
     })
+    console.log({target})
 
     const handleSubmit = ()=> mutate({...getValues(),authorId:userSession.id})
     
@@ -91,7 +92,7 @@ export function CreateNewEventModel() {
                     </DropdownMenu>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="outline" className="w-full justify-start">{getValues('type')!='none' ? t(getValues('type') as string): t('isInPersonOrVirtual')}</Button>
+                            <Button variant="outline" className="w-full justify-start">{!!getValues('type') ? t(getValues('type') as string): t('isInPersonOrVirtual')}</Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-56">
                             <DropdownMenuItem className=" gap-x-2" onClick={()=>{setValue('type','inPerson');setDummy(dummy+1)}}>

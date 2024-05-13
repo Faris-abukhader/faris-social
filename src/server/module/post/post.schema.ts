@@ -26,6 +26,7 @@ export const postCore = {
 export const createNewPostSchema = object({
     authorId:optional(string(),''), 
     groupId:optional(string(),undefined), 
+    pageId:optional(string(),undefined), 
     accountHolderId:optional(string(),''), 
     holderType:enumType(['user','group','page']),
     authorType:enumType(['user','page']),
@@ -72,9 +73,21 @@ export const getNewFeedPostListSchema = object({
 })
 
 
+export const deleteOnePostSchema = object({
+    userId:string(),
+    postId:string()
+})
+
 export const forYouPostListSchema = object({
     ...getNewFeedPostListSchema.object
 })
+
+export const createNewPagePostSchema = object({
+    authorId:string(),
+    pageId:string(),
+    ...postCore,
+})
+
 
 export type CreateNewPost = Output<typeof createNewPostSchema>
 export type ShareOnePost = Output<typeof shareOnePostSchema>
@@ -84,3 +97,5 @@ export type GetPostCommentList = Output<typeof getPostCommentList>
 export type HideOnePostParams = Output<typeof hideOnePostSchema>
 export type GetNewFeedPostListParams = Output<typeof getNewFeedPostListSchema>
 export type ForYouPostListParams = Output<typeof forYouPostListSchema>
+export type DeleteOnePostParams = Output<typeof deleteOnePostSchema>
+export type CreateNewPagePostParams = Output<typeof createNewPagePostSchema>

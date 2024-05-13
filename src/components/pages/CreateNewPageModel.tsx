@@ -64,8 +64,8 @@ export default function CreateNewPageModel() {
                     <DialogTitle className=" capitalize">{t('createNewPage')}</DialogTitle>
                 </DialogHeader>
                 <FormProvider {...methods}>
-                  <ProfileUploader setImage={(img)=>{setValue('profileImage.url',img.url);setValue('profileImage.path',img.path)}}/>
-                <CoverUploader coverImage={getValues('coverImage.url')} setCoverImage={(img)=>{setValue('coverImage.url',img.url);setValue('coverImage.path',img.path)}}/>
+                  <ProfileUploader setImage={(img)=>{setValue('profileImage.url',img.url);setValue('profileImage.path',img.path);setValue('profileImage.thumbnailUrl',img.thumbnailUrl)}}/>
+                <CoverUploader coverImage={getValues('coverImage.url')} setCoverImage={(img)=>{setValue('coverImage.url',img.url);setValue('coverImage.path',img.path);setValue('coverImage.thumbnailUrl',img.thumbnailUrl)}}/>
                 <section className=" space-y-3">
                     <Input placeholder={t('pageName')} {...register('title')} />
                     <Input placeholder={t('identifier')} {...register('identifier')}/>

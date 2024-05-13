@@ -24,7 +24,7 @@ export default function LikedPages() {
 
   return (
     <Card className='p-4 my-6'>
-      <CardHeader className='font-bold'>All pages you like (2454)</CardHeader>
+      <CardHeader className='font-bold'>{`All pages you like (${data?.totalPages??''})`}</CardHeader>
       <ViewRender
         illustrations='pages'
         isGrid={true}

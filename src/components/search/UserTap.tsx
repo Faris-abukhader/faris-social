@@ -33,7 +33,7 @@ export default function PeopleTap() {
         nextPage={nextPage}
         hasNextPage={pages - 1 > currentPage}
     >
-        {dataList.map((record: TSearchingUser, i) => <RecordCard target='user' key={i} id={record?.id} image={record?.image}>
+        {dataList.map((record: TSearchingUser, i) => <RecordCard target='profile' key={i} id={record?.id} image={record?.image}>
             <h1>{record.fullName}</h1>
             <p className='text-[10px] opacity-60 line-clamp-1'>{record.bio}</p>
         </RecordCard>)}

@@ -24,17 +24,17 @@ const UserNetworkTracker = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     
-    useEffect(() => {
-        const interval = setInterval(() => {
-            console.log(isOnline)
-            mutate({ profileId: userId, isOnline })
-        }, 5_000);
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         console.log(isOnline)
+    //         mutate({ profileId: userId, isOnline })
+    //     }, 5_000);
 
-        return () => {
-            clearInterval(interval);
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isOnline, userId])
+    //     return () => {
+    //         clearInterval(interval);
+    //     };
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [isOnline, userId])
     return <></>
 }
 

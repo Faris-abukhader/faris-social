@@ -4,7 +4,7 @@ export const postCoreInitialValues = {
     content:'',
     image:[],
     feeling:undefined,
-    whoCanSee:undefined,
+    whoCanSee:'public',
     mentionList:undefined,
     checkIn:undefined,
     hashtagList:[],

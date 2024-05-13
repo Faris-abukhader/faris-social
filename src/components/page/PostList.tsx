@@ -37,7 +37,7 @@ export default function PostList({pageId,ownerId,page}:PostListProps) {
 
   return (
     <div className='w-full max-w-lg space-y-3 scrollbar-hide'>
-      {ownerId===requesterId &&<CreatePostCard authorType='page' holderType='page' page={page}/>}
+      {ownerId===requesterId &&<CreatePostCard authorType='page' holderType='page' page={page} pageId={pageId}/>}
          <ViewRender
           illustrations="posts"
           isGrid={false}

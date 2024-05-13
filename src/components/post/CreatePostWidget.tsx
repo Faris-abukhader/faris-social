@@ -12,9 +12,10 @@ interface CreatePostCardProps {
   holderType?: Holder
   page?:TGetOneMiniPage
   groupId?:string
+  pageId?:string
 }
 
-export default function CreatePostCard({authorType,holderType,page,groupId}:CreatePostCardProps) {
+export default function CreatePostCard({authorType,holderType,page,groupId,pageId}:CreatePostCardProps) {
   const { t } = useTranslation()
   const { user, isReady } = useSessionStore(state => state)
   const {setShowModel} = usePostModel(state=>state)
@@ -38,7 +39,7 @@ export default function CreatePostCard({authorType,holderType,page,groupId}:Crea
 
   return (
     <>
-    <div className='bg-popover text-popover-foreground shadow-sm border p-3 rounded-md hover:cursor-pointer' onClick={()=>setShowModel(true,authorType,holderType,page,groupId)}>
+    <div className='bg-popover text-popover-foreground shadow-sm border p-3 rounded-md hover:cursor-pointer' onClick={()=>setShowModel(true,authorType,holderType,page,groupId,pageId)}>
       <div className='border-b pb-2 flex items-center gap-x-2'>
         <CustomAvatar className='w-9 h-9' alt={page ? page.title:user.fullName} imageUrl={page ? page.profileImage?.url:user.image??undefined}/>
         <Input placeholder={t('whatOnYourMind', { username: page ? page.title:user.fullName })} className='rounded-3xl' />

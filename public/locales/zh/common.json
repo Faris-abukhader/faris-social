@@ -471,5 +471,7 @@
     "secondsAgo":"几秒前",
     "category":"类别",
     "noDataFound":"找不到任何数据.",
-    "addFriend":"添加好友"
+    "addFriend":"添加好友",
+    "goBack":"返回",
+    "removeEventFromCalenderSuccess": "活动已成功从日历中删除"
 }

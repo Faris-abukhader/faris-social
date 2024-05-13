@@ -11,6 +11,7 @@ import { usePageModel } from '@faris/components/pages/CreateNewPageModel'
 import { EventCategories, helper, type ListType } from './menuHelper'
 import { useGroupModel } from '@faris/components/groups/CreateNewGroupModel'
 import useLocalizationStore from 'zustandStore/localizationStore'
+import { ChevronLeftIcon } from 'lucide-react'
 
 const LeftMenu = ({ type }: { type?: string }) => {
 
@@ -46,6 +47,11 @@ const LeftMenu = ({ type }: { type?: string }) => {
           </ul>}
         {!isLoading && list && list.length > 0 &&
           <ul className='pb-3'>
+            {type!=undefined &&<li><Link href={`/`} className='flex hover:bg-accent hover:text-accent-foreground w-full items-center gap-x-3 p-2 rounded-md'>
+              <ChevronLeftIcon/>
+              <h1>{t('goBack')}</h1>
+            </Link>
+            </li>}
             {list.map(({ href, title, Icon }, index) => <li key={index}><Link href={href} className='flex hover:bg-accent hover:text-accent-foreground w-full items-center gap-x-3 p-2 rounded-md'>
               {Icon}
               <h1>{t(title)}</h1>

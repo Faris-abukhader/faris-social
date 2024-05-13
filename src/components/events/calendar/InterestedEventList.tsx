@@ -7,8 +7,13 @@ import { useEventListStore } from 'zustandStore/eventList'
 import { useDataEffect } from '@faris/hooks/customDataLoader'
 import ViewRender from '@faris/components/general/ViewRender'
 import useSessionStore from 'zustandStore/userSessionStore'
+import { useRef } from 'react'
+import { useIsVisible } from '@faris/hooks/useIsVisable'
+
 
 export default function InterestedEventList({ eventType }: {eventType: EventType}) {
+    const containerRef = useRef(null)
+    const isVisable = useIsVisible(containerRef)
     const authorId = useSessionStore(state=>state.user.id)
     const { currentPage,
         target,
@@ -18,8 +23,10 @@ export default function InterestedEventList({ eventType }: {eventType: EventType
         pages,
         nextPage
     } = useEventListStore(state => state)
-    const { data, isLoading } = api.event.oneUserGoingList.useQuery({ authorId, page: currentPage, range: PAGINATION.EVENTS, type: eventType })
+    const { data, isLoading } = api.event.oneUserIntersetedList.useQuery({ authorId, page: currentPage, range: PAGINATION.EVENTS, type: eventType },{enabled:!!authorId && authorId!='' && isVisable})
 
+
+    console.log(data)
     useDataEffect<string>({
         data,
         currentPage,
@@ -30,7 +37,8 @@ export default function InterestedEventList({ eventType }: {eventType: EventType
         setFunction: setEvents
     })
 
-    return <ViewRender
+    return <div ref={containerRef}>
+        <ViewRender
         illustrations='events'
         isGrid={true}
         isLoading={isLoading}
@@ -40,8 +48,9 @@ export default function InterestedEventList({ eventType }: {eventType: EventType
         nextPage={nextPage}
         hasNextPage={pages - 1 > currentPage}
     >
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 py-3'>
-            {eventList && eventList.map(event => <EventCard status={'interested'} isOwner={false} isEditable={true} key={event.id} {...event} />)}
+        <div  className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 py-3'>
+            {eventList && eventList?.map(event => <EventCard status={'interested'} isOwner={false} isEditable={true} key={event.id} {...event} />)}
         </div>
     </ViewRender>
+    </div>
 }

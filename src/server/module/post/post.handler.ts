@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { type GetProfilePostListRequest, type CreateNewPost, type LikeOnePost, type GetPostCommentList, type ShareOnePost, type HideOnePostParams, type GetNewFeedPostListParams, type ForYouPostListParams } from "./post.schema";
+import { type GetProfilePostListRequest, type CreateNewPost, type LikeOnePost, type GetPostCommentList, type ShareOnePost, type HideOnePostParams, type GetNewFeedPostListParams, type ForYouPostListParams, DeleteOnePostParams } from "./post.schema";
 import { prisma } from "@faris/server/db";
 import { globalSelectComment } from "../comment/comment.handler";
 import { globalMinimumUserSelect } from "../profile/profile.handler";
@@ -8,6 +8,7 @@ import { NOTIFICATION_TYPE, SCORE_SYSTEM } from "../common/common.schema";
 import { createNewNotificationHandler } from "../notification/notification.handler";
 import { getUserSessionAttributesHandler } from "../auth/auth.handler";
 import { scoreProcedure } from "../common/common.handler";
+import { isAvailableForSendingFriendRequestHandler } from "../friendRequest/friendRequest.handler";
 
 export const globalSelectPost = (requesterId: string, isSharedPost = false) => {
     return {
@@ -236,6 +237,24 @@ export const getOneProfilePostListHandler = async (request: GetProfilePostListRe
 
     try {
 
+        const areTheyFriend = (await isAvailableForSendingFriendRequestHandler({id,possibleFriendId:requesterId})).status =='friend'
+        const isTheOwner = id==requesterId
+
+        const where = {
+            ...isTheOwner && {},
+            ...areTheyFriend && !isTheOwner && {
+                OR:[
+                    {whoCanSee:'public'},
+                    {whoCanSee:'friends'},
+                ]
+            },
+            ...areTheyFriend==false && !isTheOwner && {
+                whoCanSee:'public'
+            },        
+            accountHolderId:id
+        }
+
+        console.log({where})
         const data = await prisma.user.findUniqueOrThrow({
             where: {
                 id
@@ -244,21 +263,15 @@ export const getOneProfilePostListHandler = async (request: GetProfilePostListRe
                 _count: {
                     select: {
                         postList: {
-                            where:{
-                                accountHolderId:id
-                            }
+                            where
                         },
                         sharedPostList: {
-                            where:{
-                                accountHolderId:id
-                            }
+                            where
                         },
                     }
                 },
                 postList: {
-                    where:{
-                        accountHolderId:id
-                    },
+                    where,
                     take: range,
                     skip: page > 0 ? (+page - 1) * range / 2 : 0,
                     orderBy: {
@@ -267,6 +280,7 @@ export const getOneProfilePostListHandler = async (request: GetProfilePostListRe
                     select: globalSelectPost(requesterId),
                 },
                 sharedPostList: {
+                    where,
                     take: range,
                     skip: page > 0 ? (+page - 1) * range / 2 : 0,
                     orderBy: {
@@ -285,59 +299,16 @@ export const getOneProfilePostListHandler = async (request: GetProfilePostListRe
             },
         })
 
-        console.log(JSON.stringify({
-            where: {
-                id
-            },
-            select: {
-                _count: {
-                    select: {
-                        postList: {
-                            where:{
-                                accountHolderId:id
-                            }
-                        },
-                        sharedPostList: {
-                            where:{
-                                accountHolderId:id
-                            }
-                        },
-                    }
-                },
-                postList: {
-                    where:{
-                        accountHolderId:id
-                    },
-                    take: range,
-                    skip: page > 0 ? (+page - 1) * range / 2 : 0,
-                    orderBy: {
-                        createdAt: 'desc'
-                    },
-                    select: globalSelectPost(requesterId),
-                },
-                sharedPostList: {
-                    take: range,
-                    skip: page > 0 ? (+page - 1) * range / 2 : 0,
-                    orderBy: {
-                        createdAt: 'desc'
-                    },
-                    select: {
-                        reSharedFrom: {
-                            select:globalSelectPost(requesterId, true),
-                        },
-                        ...globalSelectPost(requesterId, true),
-                        post: {
-                            select:globalSelectPost(requesterId)
-                        }
-                    }
-                },
-            },
-        },null,2))
+        console.log(data)
 
-
-        return { data: [...data.postList, ...data.sharedPostList], pageNumber: Math.ceil(data._count.postList + data._count.sharedPostList ?? 0 / range) }
+        const postListPageNumber = Math.ceil(data._count.postList / range);
+        const sharedPostListPageNumber = Math.ceil(data._count.sharedPostList / range);
+        const pageNumber = Math.max(postListPageNumber, sharedPostListPageNumber);
+    
+        return { data: [...data.postList, ...data.sharedPostList], pageNumber }
 
     } catch (err) {
+        console.log(err)
         throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' })
     }
 }
@@ -776,6 +747,28 @@ export const forYouPostListHandler =async (params:ForYouPostListParams) => {
 
     }catch(err){
         console.log(err)
+    }
+}
+
+export const deleteOnePostHandler = async (params:DeleteOnePostParams) => {
+    try{
+        const {postId,userId} = params
+        
+        await prisma.post.delete({
+            where:{
+                id:postId,
+                userAuthorId:userId
+            },
+            select:{
+                id:true
+            }
+        })
+
+        return {code:200,postId}
+
+    }catch(err){
+        console.log(err)
+        throw new TRPCError({code:'INTERNAL_SERVER_ERROR'})
     }
 }
 

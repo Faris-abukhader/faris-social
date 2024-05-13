@@ -106,7 +106,7 @@ const EventHeader = ({ event }: { event: TGetOneEvent }) => {
           </div>
         }
       </div>
-      {show && <InviteFriendModel />}
+      {show && <InviteFriendModel placeHolder='username' />}
     </div>
   )
 }

@@ -28,6 +28,7 @@ const PostList =({id}:PostListProps)=> {
     },
     onSuccess(data) {
       if (data && data.data) {
+        console.log({pageNumber:data.pageNumber})
         setPosts(data.data,data.pageNumber)
         setProfileId(id)
       }
@@ -42,8 +43,6 @@ const PostList =({id}:PostListProps)=> {
     mutate({ id, requesterId, page: currentPage, range: PAGINATION.POSTS })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id,requesterId])
-
-  console.log(JSON.stringify(postList,null,2))
 
   return (
     <div className='w-full max-w-lg space-y-4'>

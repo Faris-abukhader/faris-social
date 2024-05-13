@@ -40,7 +40,7 @@ export default function ViewRender<T>({
         {Array.from({ length: lengthOfSkeleton }).map((_, i) => React.cloneElement(skeletonComonent, { key: i }))}
     </div>
 
-    if (data && data.length > 0) {
+    if (data && data.length > 0 && !isLoading) {
         return <div>
         {children}
         {hasNextPage && nextPage &&<div className="w-full flex justify-center pt-2">

@@ -2,8 +2,8 @@ import {
   router,
   protectedProcedure,
 } from "@faris/server/api/trpc";
-import { createNewPostHandler, forYouPostListHandler, getNewFeedPostListHandler, getOnePostCommentListHandler, getOneProfilePostListHandler, hideOnePostHandler, likeOnePostHandler, shareOnePostHandler } from "@faris/server/module/post/post.handler";
-import { createNewPostSchema, forYouPostListSchema, getNewFeedPostListSchema, getPostCommentList, getProfilePostListRequestSchema, hideOnePostSchema, likeOnePostSchema, shareOnePostSchema } from "@faris/server/module/post/post.schema";
+import { createNewPostHandler, deleteOnePostHandler, forYouPostListHandler, getNewFeedPostListHandler, getOnePostCommentListHandler, getOneProfilePostListHandler, hideOnePostHandler, likeOnePostHandler, shareOnePostHandler } from "@faris/server/module/post/post.handler";
+import { createNewPostSchema, deleteOnePostSchema, forYouPostListSchema, getNewFeedPostListSchema, getPostCommentList, getProfilePostListRequestSchema, hideOnePostSchema, likeOnePostSchema, shareOnePostSchema } from "@faris/server/module/post/post.schema";
 import { parse } from "valibot";
 
 export const postRouter = router({
@@ -58,4 +58,10 @@ export const postRouter = router({
       const postList = await forYouPostListHandler(input)
       return postList
     }),
+  deleteOne:protectedProcedure
+  .input(i => parse(deleteOnePostSchema, i))
+  .mutation(async ({ input }) => {
+    const result = await deleteOnePostHandler(input)
+    return result
+  }),
 });

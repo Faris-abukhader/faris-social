@@ -2,8 +2,9 @@ import {
   router,
   protectedProcedure,
 } from "@faris/server/api/trpc";
-import { changePageCoverHandler, changePageProfileHandler, createNewPageHandler, deleteOnePageHandler, getOnePageFollowerListHandler, getOnePagePhotoListHandler, getOnePagePostListHandler, getOneUserLikedPagesHandler, getOneUserPageInvitationListHandler, getOneUserPagesListHandler, getOneUserRecommendedPageListHandler, inviteUsersToPageHandler, updateOnePageHandler, updatePageIntroHandler, userPageProcedureHandler } from "@faris/server/module/page/page.handler";
+import { changePageCoverHandler, changePageProfileHandler, createNewPageHandler, createNewPagePostHandler, deleteOnePageHandler, getOnePageFollowerListHandler, getOnePagePhotoListHandler, getOnePagePostListHandler, getOneUserLikedPagesHandler, getOneUserPageInvitationListHandler, getOneUserPagesListHandler, getOneUserRecommendedPageListHandler, inviteUsersToPageHandler, updateOnePageHandler, updatePageIntroHandler, userPageProcedureHandler } from "@faris/server/module/page/page.handler";
 import { changePageCoverSchema, changePageProfileSchema, createNewPageSchema, deleteOnePageSchema, getOnePageFollowerListSchema, getOnePagePhotoListSchema, getOnePagePostListSchema, getOneUserLikedPagesParams, getOneUserPageInvitationListSchema, getOneUserPagesListSchema, getOneUserRecommendedPageListSchema, invitateUserToPageSchema, updateOnePageSchema, updatePageIntroSchema, userPageProcedureSchema } from "@faris/server/module/page/page.schema";
+import { createNewPagePostSchema } from "@faris/server/module/post/post.schema";
 import { parse } from "valibot";
 
 export const pageRouter = router({
@@ -96,5 +97,11 @@ export const pageRouter = router({
     .mutation(async ({ input }) => {
       const result = await updatePageIntroHandler(input)
       return result
-    })
+    }),
+  createPost: protectedProcedure
+    .input(i => parse(createNewPagePostSchema, i))
+    .mutation(async ({ input }) => {
+      const result = await createNewPagePostHandler(input)
+      return result
+    }),
 });

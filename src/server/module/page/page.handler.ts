@@ -6,6 +6,7 @@ import { getOneUserInterestedTopicHandler, globalMinimumUserSelect } from "../pr
 import { createNewNotificationHandler } from "../notification/notification.handler"
 import { NOTIFICATION_TYPE, SCORE_SYSTEM } from "../common/common.schema"
 import { scoreProcedure } from "../common/common.handler"
+import { type CreateNewPagePostParams } from "../post/post.schema"
 
 export const globalSelectMiniPage = {
     id:true,
@@ -479,7 +480,7 @@ export const getOneUserLikedPagesHandler =async (params:GetOneUserLikedPagesPara
             return {...page,conversationId}
         })
 
-        return {data:likePageList,pageNumber:Math.ceil(data._count.likePageList/range)}
+        return {data:likePageList,totalPages:data._count.likePageList,pageNumber:Math.ceil(data._count.likePageList/range)}
 
     }catch(err){
         console.log(err)
@@ -719,6 +720,72 @@ export const getMiniPageHandler = async(id:string)=>{
         throw new TRPCError({code:'INTERNAL_SERVER_ERROR'})
     }
 }
+
+export const createNewPagePostHandler = async (params:CreateNewPagePostParams) => {
+    const { authorId,pageId, image, mentionList,hashtagList, checkIn, ...rest } = params
+
+    const data = {
+        pageAuthor:{
+            connect:{
+                id:pageId
+            }
+        },
+        ...checkIn && {
+            checkIn: {
+                create: {
+                    location: checkIn.location
+                }
+            }
+        },
+        ...image.length > 0 && {
+            mediaList: {
+                createMany: {
+                    data: image.map(img => ({ ...img,pageOwnerId: authorId }))
+                }
+            }
+        },
+        ...hashtagList.length>0 &&{
+            hashtagList: {
+                connectOrCreate: hashtagList.map((hashtag) => ({
+                  where: { title: hashtag.title },
+                  create: { title: hashtag.title },
+                })),
+            }
+        },
+        ...rest
+
+    }
+
+    console.log(JSON.stringify(data,null,2))
+
+    try {
+        
+        const newPost = await prisma.post.create({
+            data,
+            select:{
+                ...globalSelectPost(authorId),
+                groupHolder:{
+                select:{
+                    ownerId:true,
+                }
+            }}
+        })
+
+
+        // the author of the post get scores
+        // the page get scores
+        // await Promise.all([
+        //     scoreProcedure(authorId,'user',SCORE_SYSTEM.PUBLISH_POST,'increment'),
+            await scoreProcedure(pageId,'page',SCORE_SYSTEM.PUBLISH_POST,'increment')
+        // ]);
+
+        return newPost
+
+    } catch (err) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' })
+    }   
+}
+
 
 export type TGetOnePage = Awaited<ReturnType<typeof getOnePageHandler>>
 export type TGetOneMiniPage = Awaited<ReturnType<typeof getMiniPageHandler>>

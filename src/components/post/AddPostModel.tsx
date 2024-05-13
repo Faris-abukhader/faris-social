@@ -19,7 +19,7 @@ import { ScrollArea } from "../ui/scroll-area"
 import feelingsList from "@faris/utils/postFeeling"
 import { FormProvider, useForm } from "react-hook-form"
 import { valibotResolver } from "@hookform/resolvers/valibot"
-import { type CreateNewPost, createNewPostSchema } from "@faris/server/module/post/post.schema"
+import { type CreateNewPost, createNewPostSchema, type CreateNewPagePostParams } from "@faris/server/module/post/post.schema"
 import { api } from "@faris/utils/api"
 import { usePostListStore } from "zustandStore/postListStore"
 import { create } from "zustand"
@@ -32,11 +32,12 @@ import { type CreateNewGroupPostParams } from "@faris/server/module/group/group.
 import Loading from "../general/Loading"
 import { Checkbox } from "@faris/components/ui/checkbox"
 import { useToast } from "../ui/use-toast"
+import { safeParse } from "valibot"
 
 export function AddPostModel() {
     const { t } = useTranslation()
     const { toast } = useToast()
-    const { showModel, setShowModel, page, authorType, holderType, groupId, location, setLocation, withLocation, setWithLocation } = usePostModel(state => state)
+    const { showModel, setShowModel, page, authorType, holderType, groupId, location, setLocation, withLocation, setWithLocation,pageId } = usePostModel(state => state)
     const userSession = useSessionStore(state => state.user)
     const [privacyIcon, setPrivacyIcon] = useState<JSX.Element>(<Users2 className="w-3 h-3" />)
     const [showImage, setShowImage] = useState(false)
@@ -45,7 +46,24 @@ export function AddPostModel() {
     const addGroupPost = useGroupPostListStore(state => state.addPost)
     const [dummy, setDummy] = useState(0)
     const [isGettingCoordinate, setIsGettingCoordinate] = useState(false)
+    const [isValid,setIsValid] = useState(false)
     const { mutate, isLoading } = api.post.createNewPost.useMutation({
+        onSuccess(data) {
+            addPost(data)
+            toast({
+                title: t('newPostWasSharedSuccessfully')
+            })
+        },
+        onError(error) {
+            console.log(JSON.stringify(error,null,2))
+        },
+        onSettled() {
+            setShowModel(false)
+        },
+    })
+
+
+    const { mutate:newPagePostMutate, isLoading:isPagePostLoading } = api.page.createPost.useMutation({
         onSuccess(data) {
             addPost(data)
             toast({
@@ -114,18 +132,23 @@ export function AddPostModel() {
 
     useEffect(() => {
         setValue('authorId', userSession.id)
+        holderType == 'page' && setValue('pageId', pageId ?? '')
+        holderType == 'page' && setValue('accountHolderId', pageId ?? '')
         holderType == 'group' && setValue('groupId', groupId ?? '')
+        holderType == 'group' && setValue('accountHolderId', groupId ?? '')
+        holderType == 'user' && setValue('accountHolderId', userSession.id)
         setValue('authorId', page ? page.id : userSession.id)
-        holderType == 'group' ? setValue('accountHolderId', groupId ?? '') : setValue('accountHolderId', userSession.id)
         setValue('authorType', authorType)
         setValue('holderType', holderType)
-    }, [setValue, page, userSession.id, authorType, holderType, groupId])
+    }, [setValue, page, userSession.id, authorType, holderType, groupId, pageId])
 
-    const createNewPost = (data: (CreateNewPost | CreateNewGroupPostParams)) => {
+    const createNewPost = (data: (CreateNewPost | CreateNewGroupPostParams|CreateNewPagePostParams)) => {
         if (groupId) {
             console.log(data)
             groupMutate(data as CreateNewGroupPostParams)
-        } else {
+        } else if(holderType=='page') {
+            newPagePostMutate(data as CreateNewPagePostParams)
+        }else{
             mutate(data as CreateNewPost)
         }
     }
@@ -153,6 +176,12 @@ export function AddPostModel() {
 
     };
 
+    useEffect(()=>{
+        const result = safeParse(createNewPostSchema,getValues())
+        setIsValid(result.success)
+        console.log(result)
+    },[getValues()])
+
     return (
         <Dialog  open={showModel} onOpenChange={setShowModel}>
             <DialogContent /*className="sm:max-w-[500px] h-screen max-h-[70vh] sm:h-[70vh]"*/>
@@ -160,7 +189,7 @@ export function AddPostModel() {
                     {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
                     <form onSubmit={handleSubmit(createNewPost)}>
                         <DialogHeader>
-                            <DialogTitle className="capitalize">{isLoading || isCreating ? <Loading /> : t('createNewPost')}</DialogTitle>
+                            <DialogTitle className="capitalize">{t('createNewPost')}</DialogTitle>
                         </DialogHeader>
                         <ScrollArea className="w-full h-screen max-h-[60vh] sm:h-80">
                             <div className="h-full space-y-4">
@@ -235,7 +264,7 @@ export function AddPostModel() {
                             </div>
                         </ScrollArea>
                         <DialogFooter className="pt-4">
-                            <Button /*disabled={!isValid}*/ disabled={isGettingCityName || isGettingCoordinate} type="submit">{t('post')}</Button>
+                            <Button disabled={isGettingCityName || isGettingCoordinate || isLoading || isCreating || isPagePostLoading || !isValid} type="submit">{isLoading || isCreating || isPagePostLoading ? <Loading />:t('post')}</Button>
                         </DialogFooter>
                     </form>
                 </FormProvider>
@@ -256,7 +285,8 @@ type PostModel = {
     page: TGetOneMiniPage | undefined
     showModel: boolean,
     groupId: string | null
-    setShowModel: (newValue: boolean, authorType?: Author, holderType?: Holder, page?: TGetOneMiniPage, groupId?: string) => void
+    pageId: string | null
+    setShowModel: (newValue: boolean, authorType?: Author, holderType?: Holder, page?: TGetOneMiniPage, groupId?: string,pageId?: string) => void
     setLocation: (location: string) => void
     setWithLocation: (withLocation: boolean) => void
 }
@@ -266,11 +296,12 @@ export const usePostModel = create<PostModel>((set) => ({
     authorType: 'user',
     holderType: 'user',
     groupId: null,
+    pageId:null,
     page: undefined,
     location: null,
     withLocation: false,
-    setShowModel(showModel, authorType, holderType, page, groupId) {
-        set((state) => ({ ...state, showModel, authorType: authorType ? authorType : state.authorType, holderType: holderType ? holderType : state.holderType, page, groupId }))
+    setShowModel(showModel, authorType, holderType, page, groupId,pageId) {
+        set((state) => ({ ...state, showModel, authorType: authorType ? authorType : state.authorType, holderType: holderType ? holderType : state.holderType, page, groupId,pageId }))
     },
     setLocation(location) {
         set({ location })

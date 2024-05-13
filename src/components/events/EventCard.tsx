@@ -12,6 +12,7 @@ import { api } from '@faris/utils/api'
 import Loading from '../general/Loading'
 import useSessionStore from 'zustandStore/userSessionStore'
 import { useToast } from '../ui/use-toast'
+import { useEventListStore } from 'zustandStore/eventList';
 
 interface EventCardProps extends GetOneEvent {
   isEditable?: boolean
@@ -24,11 +25,17 @@ const EventCard = ({ image, id, title, eventTime, _count, category, description,
   const userId = useSessionStore(state=>state.user.id)
   const { setShow:setOpen, show:open } = useDeleteEventDialog(state => state)
   const { show, setShow } = useUpdateEventModel(state=>state)
-  const { mutate, isLoading } = api.event.changingProcedure.useMutation()
+  const { mutate, isLoading } = api.event.changingProcedure.useMutation({
+    onSuccess(data) {
+      removeEvent(data.eventId)
+    },
+  })
+  const removeEvent = useEventListStore(state=>state.deleteEvent)
   const {mutate:removeFromCalendar,isLoading:isRemoveLoading} = api.event.removeFromCalendar.useMutation({
-    onSuccess() {
+    onSuccess(data) {
+      removeEvent(data.eventId)
       toast({
-        title:t('eventAddedToInterestedList')
+        title:t('removeEventFromCalenderSuccess')
       })
     },
   })

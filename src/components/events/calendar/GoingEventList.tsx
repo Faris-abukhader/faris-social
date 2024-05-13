@@ -7,8 +7,12 @@ import { PAGINATION } from '@faris/server/module/common/common.schema'
 import { useEventListStore } from 'zustandStore/eventList'
 import { useDataEffect } from '@faris/hooks/customDataLoader'
 import ViewRender from '@faris/components/general/ViewRender'
+import { useRef } from 'react'
+import { useIsVisible } from '@faris/hooks/useIsVisable'
 
 export default function GoingEventList({ eventType }: { eventType: EventType }) {
+    const containerRef = useRef(null)
+    const isVisable = useIsVisible(containerRef)
     const authorId = useSessionStore(state => state.user.id)
     const { currentPage,
         target,
@@ -18,7 +22,7 @@ export default function GoingEventList({ eventType }: { eventType: EventType }) 
         pages,
         nextPage
     } = useEventListStore(state => state)
-    const { data, isLoading } = api.event.oneUserGoingList.useQuery({ authorId, page: currentPage, range: PAGINATION.EVENTS, type: eventType })
+    const { data, isLoading } = api.event.oneUserGoingList.useQuery({ authorId, page: currentPage, range: PAGINATION.EVENTS, type: eventType },{enabled:!!authorId && authorId!=''&& isVisable})
 
     useDataEffect<string>({
         data,
@@ -30,7 +34,8 @@ export default function GoingEventList({ eventType }: { eventType: EventType }) 
         setFunction: setEvents
     })
 
-    return <ViewRender
+    return <div ref={containerRef}>
+        <ViewRender
         illustrations='events'
         isGrid={true}
         isLoading={isLoading}
@@ -44,4 +49,5 @@ export default function GoingEventList({ eventType }: { eventType: EventType }) 
             {eventList && eventList.map(event => <EventCard status={'going'} isOwner={false} isEditable={true} key={event.id} {...event} />)}
         </div>
     </ViewRender>
+    </div>
 }

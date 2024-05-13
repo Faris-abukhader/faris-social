@@ -36,34 +36,36 @@ export default function ThirdStep() {
     },[id])
 
 
-    const Topic = ({topic,isChecked}:{topic:string,isChecked:boolean})=>{
-        const [isChoosed,setIsChoosed] = useState(false)
-        const {t} = useTranslation()
-
-        const onClickHandler = ()=>{
-            setIsChoosed(!isChoosed)
-
-            if(isChoosed){
-                let temp = data.interestedTopics
-                temp = temp.filter((item)=>item!=topic)
-                setData((prevs)=>({...prevs,interestedTopics:temp}))
-            }else{
-                const temp = data.interestedTopics
-                temp.push(topic)
-                setData(prevs=>({...prevs,interestedTopics:temp}))
-            }
-
-        }
-        
-        return(
-            <Button variant={'ghost'} onClick={onClickHandler} className={` ${isChecked?'border':''}`}>{t(topic)}</Button>
-        )
-    }
+    const Topic = ({ topic }: { topic: string }) => {
+        const { t } = useTranslation();
+        const isChecked = data.interestedTopics.includes(topic);
+      
+        const onClickHandler = () => {
+          if (isChecked) {
+            setData((prevs) => ({
+              ...prevs,
+              interestedTopics: prevs.interestedTopics.filter((item) => item !== topic),
+            }));
+          } else {
+            setData((prevs) => ({
+              ...prevs,
+              interestedTopics: [...prevs.interestedTopics, topic],
+            }));
+          }
+        };
+      
+        return (
+          <Button variant={"ghost"} onClick={onClickHandler} className={` ${isChecked ? "border" : ""}`}>
+            {t(topic)}
+          </Button>
+        );
+      };
+      
 
     return (
         <StepCard title={'setYourInterest'} description='gettingStartStep3Notice1' step={3} onClick={() => true}>
             <ul className='flex gap-4 flex-wrap'>
-            {interestList.map(topic=><Topic key={topic} isChecked={data.interestedTopics.indexOf(topic) == -1 ? false:true} topic={topic}/>)}
+            {interestList.map(topic=><Topic key={topic} topic={topic}/>)}
             </ul>
             <p className='text-sm opacity-70'>{t('gettingStartThirdStepNote')}</p>
             <NextStepButton buttonLabel='finish' isLoading={isLoading} disabled={disabled} onClick={()=>mutate(data)} />

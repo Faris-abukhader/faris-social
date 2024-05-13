@@ -49,7 +49,7 @@ export default function SearchingNavigator() {
             </section>
             <section className='relative border-b-pb-3'>
                 <Tabs value={tap} className="w-full sm:px-2">
-                    <TabsList className={`grid w-full grid-cols-${resultType.length}`}>
+                    <TabsList className={`grid w-full grid-cols-6 ${resultType.length}`}>
                         {resultType.map((item, index) => <TabsTrigger onClick={() => updateQuery(item)} key={index} value={item}>{item}</TabsTrigger>)}
                     </TabsList>
                 </Tabs>

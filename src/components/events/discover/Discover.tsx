@@ -24,6 +24,7 @@ export default function DiscoverEvents() {
   } = useEventListStore(state => state)
   const { data, isLoading } = api.event.getRecommendedList.useQuery({ requesterId, range: PAGINATION.EVENTS, page: currentPage }, { enabled: !!requesterId })
 
+  console.log(data)
   useDataEffect<string>({
     data,
     currentPage,

@@ -20,7 +20,7 @@ type EventStore = {
     nextPage:()=>void,
 }
 export const useEventListStore = create<EventStore>((set,get)=>({
-    target:'yourEvent',
+    target:'none',
     isLoading:false,
     eventList:[],
     setEvents:(data,pages,target)=>{

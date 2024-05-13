@@ -17,8 +17,8 @@ export default function PageCard({ id, sender, page }: TGetOnePageInvitation) {
     const userId = useSessionStore(state => state.user.id)
     const { deletePage } = usePageListStore(state => state)
     const { mutate, isLoading } = api.pageInvitation.acceptOne.useMutation({
-        onSuccess() {
-            deletePage(id)
+        onSuccess(data) {
+            deletePage(data.id)
             toast({
                 title:t('pageInvitationAcceptedSuccessfully')
             })
@@ -31,7 +31,7 @@ export default function PageCard({ id, sender, page }: TGetOnePageInvitation) {
                 <div className='flex  items-center gap-x-2'>
                     <CustomAvatar className='w-20 h-20' imageUrl={page.profileImage?.url} alt={`@${page.title}_profile_img`} />
                     <div className=''>
-                        <h1 className='font-bold'>{page.title}</h1>
+                        <Link href={`/page/${page.id}`} className='font-bold'>{page.title}</Link>
                         <h3 className='text-xs opacity-80 pb-1'>{t(page.category as string)}</h3>
                         <Link href={`/profile/${sender.id}`} className="flex items-center gap-x-1">
                             <CustomAvatar className='w-4 h-4' imageUrl={sender.image?.url} alt={`${sender.image?.url ?? ''}_profile_img`} />
@@ -41,12 +41,10 @@ export default function PageCard({ id, sender, page }: TGetOnePageInvitation) {
                 </div>
             </CardContent>
             <CardFooter>
-                {isLoading ? <Loading />
-                    :
                     <Button disabled={isLoading} onClick={() => mutate({ pageId: page.id, recipientId: userId, id })} size={'sm'} variant={'secondary'} className='w-full gap-x-2'>
                         <ThumbsUp className='w-3 h-3' />
-                        <span>{t('accept')}</span>
-                    </Button>}
+                        <span>{isLoading ? <Loading />:t('accept')}</span>
+                    </Button>
             </CardFooter>
         </Card>
     )

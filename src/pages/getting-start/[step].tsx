@@ -3,6 +3,7 @@ import {sessionObjectGenerator, type UserSession, type UserSessionAttributes} fr
 import SessionSaver from '@faris/components/gettingStart/SessionSaver'
 
 import dynamic from 'next/dynamic'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 const FirstStep = dynamic(()=>import('@faris/components/gettingStart/FirstStep'))
 const SecondStep = dynamic(()=>import('@faris/components/gettingStart/SecondStep'))
@@ -36,7 +37,7 @@ export default function Step({step,session}:StepPageProps) {
 
 export const getServerSideProps = async(ctx:GetServerSidePropsContext)=>{
 
-  const {query} = ctx
+  const {query,locale} = ctx
   const {step} = query
 
   const { getIronSession }  = await import("iron-session");
@@ -104,6 +105,7 @@ return{
   props:{
     session:sessionObjectGenerator(userSession),
     step:String(step),
+    ...(await serverSideTranslations(locale??'en')),
   }
 }
 }

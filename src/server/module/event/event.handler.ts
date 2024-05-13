@@ -382,7 +382,7 @@ export const eventListChangingProcedureHandler = async (params: EventListChangin
         ])
 
 
-        return { code: 200, status:changeTo}
+        return { code: 200,eventId, status:changeTo}
 
     } catch (err) {
         console.log(err)
@@ -452,7 +452,7 @@ export const getOneUserEventInterestedInHandler = async (params: GetOneUserEvent
             }
         })
 
-        return { data, pageNumber: Math.ceil(data._count.interestedList / range) }
+        return { data:data.interestedList, pageNumber: Math.ceil(data._count.interestedList / range) }
 
     } catch (err) {
         console.log(err)

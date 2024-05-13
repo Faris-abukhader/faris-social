@@ -23,7 +23,7 @@ const TodayBirthdays = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId])
   return (
-    <Card className='w-full max-w-lg'>
+    <Card className='w-full max-w-lg px-4'>
       <CardHeader>{t('todaysBirthday')}</CardHeader>
       <ViewRender
           illustrations='party'

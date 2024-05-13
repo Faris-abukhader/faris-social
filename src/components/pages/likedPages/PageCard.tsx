@@ -13,10 +13,10 @@ import CustomAvatar from '@faris/components/general/CustomAvatar'
 export default function PageCard({ id, title, category, profileImage,conversationId }: TGetOnePage) {
     const { t } = useTranslation()
     const userId = useSessionStore(state => state.user.id)
-    const { target, deletePage } = usePageListStore(state => state)
+    const { deletePage } = usePageListStore(state => state)
     const { mutate, isLoading } = api.page.userPageProcedure.useMutation({
-        onSuccess() {
-            target == 'likedPages' ? deletePage(id) : true
+        onSuccess(data) {
+            deletePage(data.pageId)
         },
     })
     return (

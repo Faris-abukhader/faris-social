@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import { Button } from '../ui/button'
 import { Check } from 'lucide-react'
 import { useTranslation } from 'next-i18next';import useSessionStore from 'zustandStore/userSessionStore'
@@ -69,7 +69,8 @@ export default function WriteComment({ postId ,isSharedPost}: WriteCommentProps)
     }, [content.length])
 
 
-    const handleClick = () => {
+    const handleClick = (e:FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
         if (target == 'comment') {
             createNewComment({ postId,isSharedPost, authorId: user.id, content })
         } else {
@@ -82,12 +83,12 @@ export default function WriteComment({ postId ,isSharedPost}: WriteCommentProps)
     return (
         <div className='flex w-full gap-x-2 px-1 py-2'>
                 <CustomAvatar className='w-8 h-8' alt={user?.fullName} imageUrl={user.image??undefined}/>
-            <div className='w-full flex items-center ps-2 gap-x-2 rounded-full border bg-popover'>
+            <form onSubmit={handleClick} className='w-full flex items-center ps-2 gap-x-2 rounded-full border bg-popover'>
                 <input value={content} onChange={(e) => setContent(e.target.value)} placeholder={target == 'comment' ? t('writeCommentPlaceHolder') : t('replyPlaceholder', { name: commentOwner })} className='w-full py-2 text-xs text-[16px] hidden sm:block border-none bg-transparent hover:outline-none focus:outline-none' />
-                <Button disabled={!isValid} onClick={handleClick} variant={'ghost'} className='rounded-full p-0 w-8 h-8'>
+                <Button type='submit' disabled={!isValid} variant={'ghost'} className='rounded-full p-0 w-8 h-8'>
                     <Check className='w-5 h-5' />
                 </Button>
-            </div>
+            </form>
         </div>
     )
 }
