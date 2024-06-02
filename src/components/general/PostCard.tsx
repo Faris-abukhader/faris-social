@@ -145,6 +145,7 @@ const PostCard = ({ id, type, className, userAuthor, pageAuthor, content, _count
               <DropdownMenuTrigger asChild>
                 {isAddingToBookmark || isRemovingToBookmark || isHidding || isDeleting ? <Loading /> : <Button variant={'ghost'}>
                   <MoreHorizontal />
+                  <span className=' sr-only'>MoreHorizontal</span>
                 </Button>}
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56">
@@ -168,7 +169,7 @@ const PostCard = ({ id, type, className, userAuthor, pageAuthor, content, _count
           <br/>
           {hashtagList.map((hashtag,i)=><span className='text-blue-400 hover:bg-accent rounded-md p-1' key={i}><Link href={`/search?query=${hashtag.title.slice(1)}&tap=hashtag`}>{hashtag.title}</Link></span>)}
           </div>
-          {mediaList != undefined && mediaList?.length > 0 && mediaList?.map((img, i) => <Media key={i} src={img.url} isToxic={img.isToxic || true}/>)}
+          {mediaList != undefined && mediaList?.length > 0 && mediaList?.map((img, i) => <Media key={i} src={img.url} isToxic={img.isToxic}/>)}
           {/* image grid */}
           <div className='px-2 text-xs pt-4'>
             <div className='flex items-center justify-between pb-2 border-b'>

@@ -6,6 +6,7 @@ import {  hashTagTestHandler } from "@faris/server/module/hashtag/hashtag.handle
 export const birthdayRouter = router({
   test: protectedProcedure
     .query(async () => {
+      
       const start = performance.now()
       // const friends = await test()
       const hastags = await hashTagTestHandler()

@@ -615,37 +615,6 @@ export const getNewFeedPostListHandler =async (params:GetNewFeedPostListParams) 
     const {userId,page,range} = params
     try{
 
-        // const where = {
-        //     OR:[
-        //         {
-        //             userAuthorId:userId,
-        //         },
-        //         {
-        //             userAuthor:{
-        //                 friendList:{
-        //                     some:{
-        //                         friendId:userId
-        //                     }
-        //                 },
-        //                 friendOf:{
-        //                     some:{
-        //                         ownerId:userId
-        //                     }
-        //                 }
-        //             },
-        //         },
-        //         {
-        //             pageAuthor:{
-        //                 likeList:{
-        //                     some:{
-        //                         id:userId
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     ]
-        // }
-
         const where = {
             OR: [
               {

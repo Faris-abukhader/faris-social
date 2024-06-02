@@ -127,7 +127,7 @@ export default function ImageCover({ id,isOwner, coverImage,mutate }: ImageCover
                 <Button size={'sm'} onClick={() => void confirmUploadImage()}>{showCoverLoading ?<Loading withText={true}/>:t('confirm')}</Button>
                 <Button size={'sm'} variant={'outline'} onClick={cancelChangeCover}>{t('cancel')}</Button>
             </div>}
-            <Image src={newCover ? newCover : (coverImage?.url ?? '/image/background.jpeg')} width={1200} height={700} priority={true} alt='cover_image' className='w-full h-560 sm:h-80 md:h-96 sm:rounded-b-md shadow-sm object-fill' />
+            <Image src={newCover ? newCover : (coverImage?.url ?? '/image/background.jpeg')} width={1200} height={700} priority={true} alt='cover_image' className='w-full h-560 sm:h-80 md:h-96 sm:rounded-b-md shadow-sm object-cover' />
             {isOwner && <Label htmlFor='cover_file' className={`inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors  border border-input bg-background hover:bg-accent hover:text-accent-foreground h-fit p-2  sm:rounded-md z-20 absolute gap-x-2 bottom-2 ${language=='ar'?'left-2':'right-2'}`}>
                 <div>
                     <input onChange={handleUploadImage} id='cover_file' type='file' className='hidden' />

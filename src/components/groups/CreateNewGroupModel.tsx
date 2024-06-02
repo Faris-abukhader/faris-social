@@ -64,12 +64,13 @@ export default function CreateNewGroupModel() {
 
     useEffect(()=>{
         userSession.id && setValue('ownerId',userSession.id)
-    },[userSession])
+    },[setValue, userSession])
+    
     useEffect(()=>{
         const result = safeParse(createNewGroupSchema,getValues())
         setIsValid(result.success)
         console.log(result)
-    },[getValues()])
+    },[getValues])
 
     return (
         <Dialog open={show} onOpenChange={setShow}>

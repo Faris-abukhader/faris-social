@@ -56,27 +56,39 @@ const Navbar = ({ showSearchingBar = true }: { showSearchingBar?: boolean }) => 
                 {showSearchingBar && <form onSubmit={searchHandler}>
                     <div className='hidden opacity-0 md:opacity-100 md:flex items-center px-2 gap-x-2 bg-white dark:bg-black rounded-md border bg-popover'>
                         <Search className='w-5 h-5' />
-                        <input value={query} onChange={(e) => setQuery(e.target.value)} className='max-w-[100px] py-2 hidden sm:block border-none bg-transparent hover:outline-none focus:outline-none text-[16px]' />
+                        <label htmlFor='searching_query' className=' sr-only'>searching input</label>
+                        <input id='searching_query' value={query} onChange={(e) => setQuery(e.target.value)} className='max-w-[100px] py-2 hidden sm:block border-none bg-transparent hover:outline-none focus:outline-none text-[16px]' />
                     </div>
                 </form>}
             </div>
             <div className='hidden sm:flex items-center gap-x-7'>
-                {linkList.map(({ href, Icon }) => <Link key={href} href={href} className='p-3 hover:bg-accent hover:text-accent-foreground rounded-full animate-in slide-in-from-top-3 duration-500 delay-300 fade-in-5'><>{Icon}</></Link>)}
+                {linkList.map(({ href, Icon }) => <Link key={href} href={href} className='p-3 hover:bg-accent hover:text-accent-foreground rounded-full animate-in slide-in-from-top-3 duration-500 delay-300 fade-in-5'>
+                    <>{Icon}</>
+                    <label className=' sr-only'>{href} label for icon</label>
+                    </Link>)}
             </div>
             <div className='flex items-center gap-x-2'>
                 {isMobile ?
-                    <Button variant={'ghost'} className='px-2' onClick={() => void push(`/notification`)}><Bell className='w-5 h-5' /></Button>
+                    <Button variant={'ghost'} className='px-2' onClick={() => void push(`/notification`)}>
+                        <Bell className='w-5 h-5' />
+                        <span className="sr-only mx-auto">notification button</span>
+                        </Button>
                     :
                     <NotificationDropdown />
                 }
                 <ColorModeChanger />
                 <ProfileDropdown />
-                <Button className='rounded-full w-7 h-7' variant={'ghost'} size={'icon'}>
+                <Button id='searching_button' className='rounded-full w-7 h-7' variant={'ghost'} size={'icon'}>
                     <Link href={`/search`}>
                     <Search className='w-4 h-4 md:hidden' />
+                    <label className=' sr-only'>searching link</label>
                     </Link>
+                    <label htmlFor='searching_button' className="sr-only mx-auto">searching button</label>
                 </Button>
-                <Button className='sm:hidden' variant={'ghost'} onClick={setOpen}><Menu className='w-4 h-4' /></Button>
+                <Button id='show_offcanva_button' className='sm:hidden' variant={'ghost'} onClick={setOpen}>
+                <label htmlFor='show_offcanva_button' className="sr-only mx-auto">show_offcanva_button</label>
+                    <Menu className='w-4 h-4' />
+                </Button>
             </div>
             {/* phone screen */}
             {/* logo */}

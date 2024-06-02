@@ -31,7 +31,10 @@ export default function QRcodeReviewer({ target, path }: { target: Target, path:
     return (
         <Popover>
             <PopoverTrigger asChild>
-                <Button size={'sm'} variant="outline"><QrCodeIcon className='w-4 h-4' /></Button>
+                <Button id='qrcode_button' size={'sm'} variant="outline">
+                    <QrCodeIcon className='w-4 h-4' />
+                    <span  className="sr-only mx-auto">qrcode button</span>
+                    </Button>
             </PopoverTrigger>
             <PopoverContent className=" w-56 p-2">
                 <div id='qrcode_container' ref={ref}>
