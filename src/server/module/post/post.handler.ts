@@ -133,7 +133,6 @@ export const createNewPostHandler = async (request: CreateNewPost) => {
     isImageToxic = await imageToxcityRequest.json() as {result:boolean}
     }
 
-    console.log(language)
     const data = {
         ...authorType == 'user' ? {
             userAuthor: {
@@ -254,7 +253,6 @@ export const getOneProfilePostListHandler = async (request: GetProfilePostListRe
             accountHolderId:id
         }
 
-        console.log({where})
         const data = await prisma.user.findUniqueOrThrow({
             where: {
                 id
@@ -298,8 +296,6 @@ export const getOneProfilePostListHandler = async (request: GetProfilePostListRe
                 },
             },
         })
-
-        console.log(data)
 
         const postListPageNumber = Math.ceil(data._count.postList / range);
         const sharedPostListPageNumber = Math.ceil(data._count.sharedPostList / range);

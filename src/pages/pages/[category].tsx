@@ -37,7 +37,9 @@ export default function Pages({ category }: { category: Category }) {
         {CurrentReview()}
       </div>
       <CreateNewPageModel />
-      <SessionHelper/>
+             <SessionHelper/>
+
+
     </Layout>
   );
 }

@@ -16,7 +16,7 @@ export default function EventPage({event}:EventPageProps) {
   return (
     <Layout showLeftMenu={false} showRightMenu={false}>
       <EventComponent event={event}/>
-      <SessionHelper/>
+             <SessionHelper/>
     </Layout>
   );
 }

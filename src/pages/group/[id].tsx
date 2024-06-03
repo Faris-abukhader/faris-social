@@ -18,7 +18,9 @@ export default function Group({group}:GroupProps) {
     <Layout showLeftMenu={false} showRightMenu={false} className='max-w-5xl'>
       <GroupHeader {...group} />
       <GroupContent group={group} />
-      <SessionHelper/>
+             <SessionHelper/>
+
+
     </Layout>
   );
 }

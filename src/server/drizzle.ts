@@ -15,11 +15,16 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 const client = new Client({
-  connectionString: process.env.DATABASE_URL as string,
+  connectionString: process.env.DRIZZLE_DATABASE_URL as string,
 });
 
 void (async() => {
-  await client.connect()
+  try{
+    await client.connect()
+  }catch(err){
+    console.log('drizzle error is here . . .')
+    console.log(err)
+  }
 })();
 
 export const drizzle = Drizzle(client,{schema,logger:true});

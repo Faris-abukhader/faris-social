@@ -231,8 +231,8 @@ export const getOneProfileStoriesHandler = async(params:GetOneProfileStoriesPara
                 stories,
             };
         }));
-        console.log('end to here')
 
+        
         return {data:ownerStoryData,pageNumber:Math.ceil(length/range)}
 
     }catch(err){

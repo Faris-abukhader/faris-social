@@ -19,7 +19,9 @@ export default function Page({page}:PageProps) {
     <Layout showLeftMenu={false} showRightMenu={false} className='max-w-5xl'>
         <PageHeader {...page}/>
         <PageContent page={page}/>
-        <SessionHelper/>
+               <SessionHelper/>
+
+
     </Layout>
   )
 }

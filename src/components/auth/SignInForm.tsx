@@ -60,7 +60,7 @@ export default function SignInForm() {
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center px-2 sm:px-0">
-      <SessionHelper/>
+       <SessionHelper/>
       <Card className="w-full space-y-4 p-4 py-8 sm:w-3/4 lg:w-1/2">
         <h1 className="py-4 text-center text-xl font-bold opacity-70">
           {t("welcomeToPlatform")}

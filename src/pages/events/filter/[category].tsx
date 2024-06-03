@@ -18,7 +18,9 @@ export default function CategoryFilter({category}:CategoryFilterProps) {
   return (
     <Layout type='events' showRightMenu={false} className=' max-w-6xl sm:px-4'>
         <EventList category={category}/>
-        <SessionHelper/>
+               <SessionHelper/>
+
+
     </Layout>
   );
 }

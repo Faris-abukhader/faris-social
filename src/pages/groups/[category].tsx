@@ -38,7 +38,9 @@ export default function Groups({ category }: { category: string }) {
         {CurrentReview()}
       </div>
       <CreateNewGroupModel/>
-      <SessionHelper/>
+             <SessionHelper/>
+
+
     </Layout>
   );
 }

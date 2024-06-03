@@ -3,13 +3,13 @@ import IllustrationContainer from '../general/IllustrationContainer'
 import { Button } from '../ui/button'
 import { HomeIcon } from 'lucide-react'
 import { useTranslation } from 'next-i18next';
-import StoresHelper from '../general/StoresHelper';
+import SessionHelper from '../general/SessionHelper';
 
 export default function NotFound() {
     const { t } = useTranslation()
     return (
         <div className="w-full h-[80vh] flex items-center justify-center">
-            <StoresHelper session={undefined} isMobile={undefined} language={undefined}/>
+            <SessionHelper/>
             <div className=" relative">
                 <IllustrationContainer description={t('404')} width={400} height={400} path="/illustrations/404.svg" />
                 <Link href={`/`}>

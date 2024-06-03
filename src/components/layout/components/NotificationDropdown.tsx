@@ -41,8 +41,6 @@ const NotificationDropdown = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userId])
 
-    console.log(notificationList)
-
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>

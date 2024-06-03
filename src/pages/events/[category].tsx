@@ -32,7 +32,9 @@ export default function Groups({ category }: { category: Category }) {
   return (
     <Layout type='events' showRightMenu={false} className=' max-w-5xl'>
       {CurrentReview()}
-      <SessionHelper/>
+             <SessionHelper/>
+
+
     </Layout>
   );
 }

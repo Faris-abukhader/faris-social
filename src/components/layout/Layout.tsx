@@ -22,7 +22,7 @@ interface Props {
   type?: string,
   className?: string
   showSearchingBar?: boolean
-  session?: UserSession
+  session?: UserSession | null
   isMobile?:boolean
   locale?:string
 }
@@ -40,7 +40,7 @@ const Layout = ({ children, title = 'Faris social', description = 'welcome to fa
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <StoryGallary />
-      <StoresHelper session={session} isMobile={isMobile} language={locale}/>
+      <StoresHelper session={session??undefined} isMobile={isMobile} language={locale}/>
       <div dir={locale !== undefined && locale === 'ar' ? 'rtl' : lang === 'ar' ? 'rtl' : 'ltr'} className="-pb-20">
         <div className='bg-zinc-50 dark:bg-black  max-h-screen'>
           <Navbar showSearchingBar={showSearchingBar} />

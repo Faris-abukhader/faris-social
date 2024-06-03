@@ -177,11 +177,13 @@ export function AddPostModel() {
     };
 
     useEffect(()=>{
-        const result = safeParse(createNewPostSchema,getValues())
-        // setDummy(dummy+1)
-        setIsValid(result.success)
-        console.log(result)
-    },[getValues()])
+        if(showModel){
+            const result = safeParse(createNewPostSchema,getValues())
+            // setDummy(dummy+1)
+            setIsValid(result.success)
+            console.log(result)    
+        }
+    },[getValues(),showModel])
 
     return (
         <Dialog  open={showModel} onOpenChange={setShowModel}>

@@ -14,6 +14,7 @@ import { type ListType,EventCategories, helper } from './menuHelper'
 import { useTranslation } from 'next-i18next';import { usePageModel } from '@faris/components/pages/CreateNewPageModel'
 import { useGroupModel } from '@faris/components/groups/CreateNewGroupModel'
 import useLocalizationStore from 'zustandStore/localizationStore'
+import { ChevronLeftIcon } from 'lucide-react'
 
 const Offcanva = ({type}:{type:string})=> {
   const {open,toggle,setOpen} = useOffcanva(state=>state)
@@ -27,6 +28,8 @@ const Offcanva = ({type}:{type:string})=> {
   useEffect(() => {
     isReady && setList(helper(type ?? 'main'))
   }, [isReady, type])
+
+  console.log({type})
 
   return (
     <Sheet onOpenChange={toggle} open={open}>
@@ -43,6 +46,12 @@ const Offcanva = ({type}:{type:string})=> {
             <div className="w-28 h-8 skeleton-background rounded"></div>
           </ul>}
           <ul className='pb-3'>
+          {type!=undefined && type!='' &&<li>
+              <Link href={`/`} onClick={()=>setOpen(false)} className='flex hover:bg-accent hover:text-accent-foreground w-full items-center gap-x-3 p-2 rounded-md'>
+              <ChevronLeftIcon/>
+              <h1>{t('goBack')}</h1>
+            </Link>
+            </li>}
         {isReady && list.map(({ href, title, Icon }, index) => <div key={index}><Link href={href} onClick={()=>setOpen(false)} className='flex hover:bg-accent hover:text-accent-foreground w-full items-center gap-x-3 p-2 rounded-md'>
           {Icon}
           <h1>{t(title)}</h1>

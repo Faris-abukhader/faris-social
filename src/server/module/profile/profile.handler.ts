@@ -241,6 +241,7 @@ export const getOneProfilePhotoListHandler = async (request: GetOneProfileFriend
         return { data, pageNumber: Math.ceil(data._count.mediaList / range) }
 
     } catch (err) {
+        console.log('error from profile.handler')
         console.log(err)
         throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' })
     }

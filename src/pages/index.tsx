@@ -11,7 +11,7 @@ export default function Home(props: SSRprops) {
 
   return (
     <Layout{...props} className='w-full sm:w-full px-0 sm:px-0'>
-      <StoryBar profileId={props.session?.id} />
+      <StoryBar profileId={props.session?.id??'-1'} />
       <div className='mt-5 px-2 sm:px-8'>
         <FeedPostList/>
       </div>

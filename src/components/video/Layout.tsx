@@ -7,7 +7,7 @@ import MobileNavbar from './MobileNavbar'
 import useSessionStore from 'zustandStore/userSessionStore'
 import { type UserSession } from '@faris/server/module/auth/auth.handler'
 
-export default function Layout({children,type,session,isMobile}:{children:ReactNode,type?:string,session:UserSession,isMobile:boolean}) {
+export default function Layout({children,type,session,isMobile}:{children:ReactNode,type?:string,session?:UserSession|null,isMobile:boolean}) {
   
   const {isReady,setSession} = useSessionStore(state=>state)
   useEffect(()=>{

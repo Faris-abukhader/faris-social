@@ -9,7 +9,6 @@ const redis = new Redis({
   token: env.UPSTASH_REDIS_REST_TOKEN,
 })
 
-
 export default redis;
 
 

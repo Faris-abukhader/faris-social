@@ -7,6 +7,9 @@ export const handleCommonServerSideProps = async (ctx: GetServerSidePropsContext
     try {
   
       const data = await ssrWrapper(ctx);
+
+
+      console.log({data})
   
       return {
         props: {

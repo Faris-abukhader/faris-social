@@ -8,8 +8,6 @@ import dynamic from "next/dynamic";
 const SignInForm = dynamic(()=>import('@faris/components/auth/SignInForm'))
 const SignUpForm = dynamic(()=>import('@faris/components/auth/SignUpForm'))
 
-import {prisma} from '@faris/server/db'
-import bcrypt from 'bcrypt'
 
 export default function AuthPage({ operation }: { operation: Operation }) {
 
