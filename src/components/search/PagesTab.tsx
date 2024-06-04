@@ -12,7 +12,7 @@ export default function PagesTap() {
   const searchParams = useSearchParams()
   const query = searchParams.get('query')
   const { dataList, setData, loadData, nextPage, currentPage, pages, range, type } = useSearchingStore(state => state);
-  const { data, isLoading } = api.searching.page.useQuery({ query: String(query), page: currentPage, range }, { enabled: !!query, cacheTime: 60 }) // cache the result for one minute
+  const { data, isLoading } = api.searching.page.useQuery({ query: String(query), page: currentPage, range }, { enabled: !!query })
 
   useSearchingDataLoader({
     data,

@@ -9,7 +9,7 @@ import { useDataEffect } from '@faris/hooks/customDataLoader'
 export default function Feed() {
   const userId = useSessionStore(state => state.user.id)
   const { groupPost, setGroupPost, loadGroupPost, nextPage, totalPages, profileId, currentPage, range } = usePostListStore(state => state)
-  const { data, isLoading } = api.group.getOneUserGroupFeeds.useQuery({ userId, page: currentPage, range }, { enabled: !!userId, cacheTime: 60 }) // cache the result for one minute
+  const { data, isLoading } = api.group.getOneUserGroupFeeds.useQuery({ userId, page: currentPage, range }, { enabled: !!userId })
 
   useDataEffect<string>({
     data,

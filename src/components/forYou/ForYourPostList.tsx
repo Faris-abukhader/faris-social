@@ -11,7 +11,7 @@ import { useDataEffect } from '@faris/hooks/customDataLoader'
 export default function ForYouPostList() {
     const userId = useSessionStore(state => state.user.id)
     const { postList, range, currentPage,loadFeedPosts,setFeedPosts, nextPage, totalPages,profileId } = usePostListStore()
-    const { data, isLoading } = api.post.forYou.useQuery({ userId, range, page: currentPage }, { enabled: !!userId, cacheTime: 60 })// cache the result for one minute
+    const { data, isLoading } = api.post.forYou.useQuery({ userId, range, page: currentPage }, { enabled: !!userId})
 
     useDataEffect<string>({
         data,

@@ -14,7 +14,7 @@ export default function YourGroups() {
   const { t } = useTranslation()
   const userId = useSessionStore(state => state.user.id)
   const { groupList, currentPage, range, target,nextPage,pages, setGroups, loadGroups } = useGroupListStore(state => state)
-  const { data, isLoading } = api.group.getOneUserGroups.useQuery({ userId, page: currentPage, range }, { enabled: !!userId, cacheTime: 60 }) // cache the result for one minute
+  const { data, isLoading } = api.group.getOneUserGroups.useQuery({ userId, page: currentPage, range }, { enabled: !!userId })
   const showCreateNewGroupModel = useGroupModel(state => state.setShow)
   const showUpdateModel = useUpdateGroupModel(state => state.show)
 

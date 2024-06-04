@@ -12,7 +12,7 @@ interface FollowerTabProps {
 
 export default function FollowerTab({ pageId }: FollowerTabProps) {
   const [currentPage, setCurrentPage] = useState(0)
-  const { data, isLoading } = api.page.getFollowerList.useQuery({ id: pageId, page: currentPage, range: PAGINATION.FOLLOWERS }, { enabled: !!pageId, cacheTime: 60 })// cache for one minute
+  const { data, isLoading } = api.page.getFollowerList.useQuery({ id: pageId, page: currentPage, range: PAGINATION.FOLLOWERS }, { enabled: !!pageId })
   return (
     <Card className='p-4 rounded-md'>
       <h1 className='py-4 text-xl font-bold'>Followers</h1>

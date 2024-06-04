@@ -19,7 +19,7 @@ export default function ContactList() {
     const deferredQuery = useDeferredValue(query);
     const userId = useSessionStore(state => state.user.id)
     const { setConversationList, loadConversations, totalConversationPages, searchConversation, conversationList, filteredConversationList, currentConversationPage, nextConversation, conversationRange } = useConversationListStore(state => state)
-    const { data, isLoading } = api.message.getOneUserConversationList.useQuery({ userId, page: currentConversationPage, range: conversationRange }, { enabled: !!userId, cacheTime: 60 }) // cache for one minute
+    const { data, isLoading } = api.message.getOneUserConversationList.useQuery({ userId, page: currentConversationPage, range: conversationRange }, { enabled: !!userId }) // cache for one minute
 
     useEffect(() => {
 

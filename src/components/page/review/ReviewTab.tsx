@@ -22,7 +22,7 @@ const ReviewTab = ({ pageID, ownerId, rate, totalReviews }: ReviewTabProps) => {
     const userId = useSessionStore(state => state.user.id)
     const { reviewList, setReviews, loadReviews, nextPage, hasNext, pageId, range, currentPage } = usePageReviewStore(state => state)
     // fix the bug here . . . 
-    const { data, isLoading } = api.pageReivew.getOnePageList.useQuery({ pageId: pageID, range, page: currentPage }, { enabled: !pageId, cacheTime: 60 }) // cache for one minute
+    const { data, isLoading } = api.pageReivew.getOnePageList.useQuery({ pageId: pageID, range, page: currentPage }, { enabled: !pageId })
 
     useEffect(() => {
         data && data.data && (pageId ? loadReviews(data?.data, data?.pageNumber) : setReviews(data?.data, data?.pageNumber, pageID))

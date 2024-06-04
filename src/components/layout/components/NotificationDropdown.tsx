@@ -20,7 +20,7 @@ const NotificationDropdown = () => {
     const { t } = useTranslation()
     const userId = useSessionStore(state => state.user.id)
     const {data:notificationList,setData,addRecord} = useNotificationStore()
-    const { data, isLoading } = api.notification.oneUserNotificationList.useQuery({ userId, range: PAGINATION.MINI, page: 0 }, { enabled: !!userId && notificationList.length==0, cacheTime: 60 }) // cache for one minute
+    const { data, isLoading } = api.notification.oneUserNotificationList.useQuery({ userId, range: PAGINATION.MINI, page: 0 }, { enabled: !!userId && notificationList.length==0})
 
     const newNotificationHandler = (notification: TGetOneNotification) => addRecord(notification)
     

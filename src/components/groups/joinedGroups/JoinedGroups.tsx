@@ -10,7 +10,7 @@ export default function JoinedGroups() {
   const {t} = useTranslation()
   const userId = useSessionStore(state => state.user.id)
   const { groupList, currentPage, range, target,nextPage,pages, setGroups, loadGroups } = useGroupListStore(state => state)
-  const { data, isLoading } = api.group.getOneUserJoinedGroups.useQuery({ userId, page: currentPage, range }, { enabled: !!userId, cacheTime: 60 }) // cache the result for one minute
+  const { data, isLoading } = api.group.getOneUserJoinedGroups.useQuery({ userId, page: currentPage, range }, { enabled: !!userId })
 
   useDataEffect<string>({data,
     currentPage,

@@ -14,7 +14,7 @@ export default function HashtagTap() {
   const requesterId = useSessionStore(state=>state.user.id)
   const query = searchParams.get('query')
   const { dataList, setData, loadData, nextPage, currentPage, pages, range, type } = useSearchingStore(state => state);
-  const { data, isLoading } = api.searching.hashtag.useQuery({ requesterId,title:`#${String(query)}`, page: currentPage, range }, { enabled: !!query && !!requesterId, cacheTime: 60 }) // cache the result for one minute
+  const { data, isLoading } = api.searching.hashtag.useQuery({ requesterId,title:`#${String(query)}`, page: currentPage, range }, { enabled: !!query && !!requesterId }) 
 
   console.log({data})
   useSearchingDataLoader({
