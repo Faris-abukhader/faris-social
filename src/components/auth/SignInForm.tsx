@@ -91,6 +91,7 @@ export default function SignInForm() {
           className="w-full"
         >
           {isLoading ? <Loading withText={true} /> : t("signIn")}
+          <span className="sr-only">sign in button</span>
         </Button>
         {errorMessage && <Alert variant={"destructive"}>{errorMessage}</Alert>}
         <div className="text-center">

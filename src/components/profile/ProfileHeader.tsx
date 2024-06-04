@@ -79,7 +79,6 @@ const ProfileHeader = ({ fullName, bio, status, livingLocation, fromLocation, co
   }, [id,isBlocked])
 
 
-
   return (
     <div dir={language=='ar'?'rtl':'ltr'} className='w-full'>
       <ImageCover id={id} isOwner={sessionId == id} coverImage={coverImage} mutate={coverMutate} />
