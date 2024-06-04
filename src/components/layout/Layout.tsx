@@ -47,7 +47,7 @@ const Layout = ({ children, title = 'Faris social', description = 'welcome to fa
           <div className='flex fixed left-0 top-[64px] w-full items-start justify-between'>
             {showLeftMenu && <LeftMenu type={type} />}
             <div className={`w-full max-h-screen flex items-start justify-center ${showRightMenu ? 'lg:justify-center' : 'lg:justify-center'} scrollbar-hide p-0`}>
-              <ScrollArea className={cn(`w-full px-2 sm:px-8 pb-8 h-screen scrollbar-hide`, className)}>
+              <ScrollArea className={cn(`w-full px-2 sm:px-8 pb-8 h-[screen] scrollbar-hide`, className)}>
                 {children}
               </ScrollArea>
             </div>

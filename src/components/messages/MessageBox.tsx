@@ -18,7 +18,6 @@ import ConversationHeader from './ConversationHeader'
 import { pageToUser } from './conversation/ContactCard'
 import { useQueryParam } from '@faris/hooks/useConversationParams'
 import {type  TGetMiniUser } from '@faris/server/module/profile/profile.handler'
-import { measureMemory } from 'vm'
 
 export default function MessageBox() {
   const [message, setMessage] = useState('')
@@ -137,7 +136,7 @@ export default function MessageBox() {
   useEffect(() => {
     scrollToBottomOfList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scrollTargetRef]);
+  }, [scrollTargetRef,messageList]);
 
 
   useEffect(() => {
@@ -194,12 +193,12 @@ export default function MessageBox() {
   };
 
 
-  if(isGettingConversation || isCreatingConveration) return<div className='flex items-center justify-center max-h-screen w-full'><Loading/></div>
+  if(isGettingConversation || isCreatingConveration) return<div className='flex items-center justify-center h-screen max-h-screen w-full'><Loading/></div>
   if (!currentConversation) return <div className='max-h-screen w-full' />
   return (
-    <div className='max-h-screen w-full'>
+    <div className='h-[100dvh] w-full'>
       <ConversationHeader currentFriend={getUser()} conversationId={currentConversation.id} />
-      <ScrollArea className='h-[53vh] p-2 pb-5'>
+      <ScrollArea className='h-[55dvh] p-2 pb-5'>
         <ul className='space-y-5 pt-4'>
           {isLoading ? <div className='w-full h-full flex items-center justify-center'><Loading /></div>
             :
@@ -208,7 +207,7 @@ export default function MessageBox() {
         </ul>
         <div ref={scrollTargetRef}></div>
       </ScrollArea>
-      <div className='relative px-2 pb-3 border-t pt-2'>
+      <div className='relative h-[10dvh] px-2 pb-3 border-t pt-2'>
         {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
         <form onSubmit={(e) => {
           e.preventDefault();

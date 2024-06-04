@@ -56,7 +56,7 @@ const ConversationHeader = ({ currentFriend, conversationId }: ConversationHeade
     }, [currentFriend, conversationId])
 
 
-    return <Button variant={'ghost'} className='w-full h-1/2 space-y-2 py-5 pt-20 border-b rounded-none'>
+    return <Button variant={'ghost'} className='w-full h-[25dvh] space-y-2 py-5 pt-20 border-b rounded-none'>
         <Link href={`/${currentFriend?.isUser?'profile':'page'}/${currentFriend?.id ?? ''}`} className='space-y-2'>
             <div className='w-fit h-fit relative mx-auto'>
             <CustomAvatar imageUrl={currentFriend?.image?.url} alt={`profile`} />

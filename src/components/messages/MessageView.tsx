@@ -6,7 +6,7 @@ import { PAGINATION } from '@faris/server/module/common/common.schema'
 
 export default function MessageView() {
   return (
-    <div className='w-full flex items-start'>
+    <div className='w-full h-[100dvh] overflow-hidden flex items-start'>
         <ConversationList/>
         <MessageBox/>
     </div>
