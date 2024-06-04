@@ -86,6 +86,7 @@ export default function WriteComment({ postId ,isSharedPost}: WriteCommentProps)
             <form onSubmit={handleClick} className='w-full flex items-center ps-2 gap-x-2 rounded-full border bg-popover'>
                 <input value={content} onChange={(e) => setContent(e.target.value)} placeholder={target == 'comment' ? t('writeCommentPlaceHolder') : t('replyPlaceholder', { name: commentOwner })} className='w-full py-2 text-xs text-[16px] hidden sm:block border-none bg-transparent hover:outline-none focus:outline-none' />
                 <Button type='submit' disabled={!isValid} variant={'ghost'} className='rounded-full p-0 w-8 h-8'>
+                    <span className=' sr-only'>pubish comment</span>
                     <Check className='w-5 h-5' />
                 </Button>
             </form>

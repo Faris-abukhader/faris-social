@@ -56,6 +56,7 @@ const Navbar = ({ showSearchingBar = true }: { showSearchingBar?: boolean }) => 
                 {showSearchingBar && <form onSubmit={searchHandler}>
                     <div className='hidden opacity-0 md:opacity-100 md:flex items-center px-2 gap-x-2 bg-white dark:bg-black rounded-md border bg-popover'>
                         <Search className='w-5 h-5' />
+                        <span className=' sr-only'>searching button</span>
                         <label htmlFor='searching_query' className=' sr-only'>searching input</label>
                         <input id='searching_query' value={query} onChange={(e) => setQuery(e.target.value)} className='max-w-[100px] py-2 hidden sm:block border-none bg-transparent hover:outline-none focus:outline-none text-[16px]' />
                     </div>
@@ -90,8 +91,6 @@ const Navbar = ({ showSearchingBar = true }: { showSearchingBar?: boolean }) => 
                     <Menu className='w-4 h-4' />
                 </Button>
             </div>
-            {/* phone screen */}
-            {/* logo */}
         </Card>
 
     )

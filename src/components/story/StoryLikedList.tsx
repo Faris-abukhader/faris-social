@@ -31,7 +31,10 @@ export default function StoryLikedList({ show, setShow, storyId }: { show: boole
 
     return (
         <div className={`${!show ? 'w-0 h-0' : 'w-3/4 h-72'} overflow-hidden  absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 fade-in-50 zoom-in-75 bg-accent transition-all duration-500 rounded-md shadow-md`}>
-            <Button variant={'outline'} onClick={() => setShow(false)} className=" absolute top-2 right-2 w-fit h-fit p-1 rounded-full"><X className="w-3 h-3" /></Button>
+            <Button variant={'outline'} onClick={() => setShow(false)} className=" absolute top-2 right-2 w-fit h-fit p-1 rounded-full">
+                <X className="w-3 h-3" />
+                <span className=" sr-only">click story button</span>
+                </Button>
             {show && <div className="absolute top-6 left-0 w-full h-full p-3">
                 <ViewRender
                     illustrations='friends'
