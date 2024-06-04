@@ -250,7 +250,7 @@ model SharedPost {
     hashtagList     Hashtag[]
     languageId            Int?
     language              Language?    @relation(fields: [languageId], references: [id])
-
+    isToxic     Boolean     @default(false)
 }
 
 model Image {

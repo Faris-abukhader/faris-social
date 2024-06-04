@@ -475,9 +475,61 @@ export const getOnePostCommentListHandler = async (params: GetPostCommentList) =
 
 export const shareOnePostHandler = async (params: ShareOnePost) => {
 
-    const { authorId, holderType, accountHolderId, postId, mentionList, checkIn, isResharedPost,hashtagList, ...rest } = params
+    const { authorId, holderType, accountHolderId, postId, mentionList,image, checkIn, isResharedPost,hashtagList,content, ...rest } = params
 
+
+
+    let language = {predicted_language:'English'}
+    let toxicity = {is_toxic:false} 
+    let isImageToxic = {result:false}
+
+    if(process.env.NODE_ENV !== "production"){
+    // getting the preduction of post language and toxicity
+    const [ languageRequest,toxicityRequest,imageToxcityRequest ] =  await Promise.all([
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        fetch(`${process.env.AI_API!}/detect_language`,{
+            method:"POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body:JSON.stringify({
+                text:content
+            })
+        }),
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        fetch(`${process.env.AI_API!}/detect_toxicity`,{
+            method:"POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body:JSON.stringify({
+                text:content
+            })
+        }),
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        fetch(`${process.env.AI_API!}/is-image-toxic`,{
+            method:"POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body:JSON.stringify({
+                image:image.at(0)?.url
+            })
+        })
+    ])
+    language = await languageRequest.json() as {predicted_language:string}
+    toxicity = await toxicityRequest.json() as {is_toxic:boolean}  
+    isImageToxic = await imageToxcityRequest.json() as {result:boolean}
+    }
     const data = {
+        content,
+        language:{
+            connect:{
+                name:language.predicted_language
+            }
+        },
+        isToxic:toxicity.is_toxic,
+
         userAuthor: {
             connect: {
                 id: authorId,
@@ -531,6 +583,13 @@ export const shareOnePostHandler = async (params: ShareOnePost) => {
                   where: { title: hashtag.title },
                   create: { title: hashtag.title },
                 })),
+            }
+        },
+        ...image.length > 0 && {
+            mediaList: {
+                createMany: {
+                    data: image.map(img => ({ ...img, ownerId: authorId ,isToxic:isImageToxic.result}))
+                }
             }
         },
         ...rest
