@@ -4,7 +4,7 @@ import { prisma } from "@faris/server/db";
 import { type TGetMiniUser, globalMinimumUserSelect } from "../profile/profile.handler";
 import { createNewNotificationHandler } from "../notification/notification.handler";
 import { NOTIFICATION_TYPE, SCORE_SYSTEM } from "../common/common.schema";
-import { scoreProcedure } from "../common/common.handler";
+import { getCacheStrategy, scoreProcedure } from "../common/common.handler";
 
 
 export const globalStorySelect = (requesterId:string)=>  ({
@@ -100,6 +100,7 @@ export const getOneUserStoryListHandler = async(params:GetOneUserStoryListParams
                     gt:twentyFourHoursAgo
                 }
             },
+            cacheStrategy:getCacheStrategy('story'),
             select:globalStorySelect(requesterId),
         })
 
@@ -152,6 +153,7 @@ export const getOneProfileStoriesHandler = async(params:GetOneProfileStoriesPara
             where:{
                 id:requesterId
             },
+            cacheStrategy:getCacheStrategy('story'),
             select:{
                 likedStoriesList:{
                     select:{
@@ -166,6 +168,7 @@ export const getOneProfileStoriesHandler = async(params:GetOneProfileStoriesPara
         // getting the friends ids for last 24H story owners
         const owners = await prisma.story.findMany({
             where,
+            cacheStrategy:getCacheStrategy('story'),
             select:{
                 owner:{
                     select:globalMinimumUserSelect
@@ -197,10 +200,11 @@ export const getOneProfileStoriesHandler = async(params:GetOneProfileStoriesPara
             const storiesData = await prisma.story.findMany({
                 where: {
                     ownerId: user.id,
-                    // createdAt: {
-                    //     gt: twentyFourHoursAgo,
-                    // },
+                    createdAt: {
+                        gt: twentyFourHoursAgo,
+                    },
                 },
+                cacheStrategy:getCacheStrategy('story'),
                 select:
                 {
                     ...globalStorySelect(requesterId),
@@ -298,6 +302,7 @@ export const getOneStoryLikeListHandler =async (params:GetOneStoryLikeListParams
             where:{
                 id:storyId
             },
+            cacheStrategy:getCacheStrategy('user'),
             select:{
                 _count:{
                     select:{

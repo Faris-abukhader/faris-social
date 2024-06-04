@@ -5,7 +5,7 @@ import { globalSelectPost } from "../post/post.handler"
 import { getOneUserInterestedTopicHandler, globalMinimumUserSelect } from "../profile/profile.handler"
 import { createNewNotificationHandler } from "../notification/notification.handler"
 import { NOTIFICATION_TYPE, SCORE_SYSTEM } from "../common/common.schema"
-import { scoreProcedure } from "../common/common.handler"
+import { getCacheStrategy, scoreProcedure } from "../common/common.handler"
 
 export const globalSelectGroup = (requesterId: string | undefined) => {
     return {
@@ -245,6 +245,7 @@ export const getOneUserGroupsListHandler = async (params: GetOneUserGroupsList) 
             where: {
                 id: userId
             },
+            cacheStrategy:getCacheStrategy('group'),
             select: {
                 _count: {
                     select: {
@@ -315,6 +316,7 @@ export const getOneUserRecommendedGroupListHandler = async (params: GetOneUserRe
                     // Add more conditions as needed
                 ],
             },
+            cacheStrategy:getCacheStrategy('group'),
             take: range,
             skip: page > 0 ? page * range : 0,
             select: globalSelectGroup(userId),
@@ -335,6 +337,7 @@ export const getOneUserJoinedGroupsHandler = async (params: GetOneUserJoinedGrou
             where: {
                 id: userId
             },
+            cacheStrategy:getCacheStrategy('group'),
             select: {
                 _count: {
                     select: {
@@ -364,6 +367,7 @@ export const getOneUserGroupInvitationListHandler = async (params: GetOneUserGro
             where: {
                 id: userId
             },
+            cacheStrategy:getCacheStrategy('group'),
             select: {
                 _count: {
                     select: {
@@ -441,6 +445,7 @@ export const getOneGroupPostListHandler = async (params: GetOneGroupPostListPara
             where: {
                 id: groupId,
             },
+            cacheStrategy:getCacheStrategy('post'),
             select: {
                 ...minimumGroupSelect,
                 _count:{
@@ -675,6 +680,7 @@ export const getOneGroupFollowerListHandler = async (params: GetOneGroupFollower
             where: {
                 id
             },
+            cacheStrategy:getCacheStrategy('group'),
             select: {
                 _count: {
                     select: {
@@ -705,6 +711,7 @@ export const getOneUserGroupsPostListHandler = async (params: GetOneUserGroupsPo
             where: {
                 id: userId
             },
+            cacheStrategy:getCacheStrategy('post'),
             select: {
                 _count: {
                     select: {
@@ -797,6 +804,7 @@ export const getOneGroupPostsHandler = async (params: GetOneGroup) => {
             where: {
                 id: groupId
             },
+            cacheStrategy:getCacheStrategy('post'),
             select: {
                 ...minimumGroupSelect,
                 postList: {
@@ -870,6 +878,7 @@ export const getOneUserMutedListHandler = async (params: GetOneUserMutedListPara
             where: {
                 id:userId
             },
+            cacheStrategy:getCacheStrategy('group'),
             select:{
                 _count:{
                     select:{
@@ -901,6 +910,7 @@ export const searchUserJoinedGroupHandler = async (params: SearchUserJoinedGroup
             where: {
                 id:userId
             },
+            cacheStrategy:getCacheStrategy('group'),
             select:{
                 inGroupList:{
                     where:{
@@ -1188,6 +1198,7 @@ export const getOneGroupJoinRequestListHandler =async (params:GetOneGroupJoinReq
 
         const requests = await prisma.getInGroupRequest.findMany({
             where,
+            cacheStrategy:getCacheStrategy('group'),
             take:range,
             skip:page>0?page*range:0,
             select:{

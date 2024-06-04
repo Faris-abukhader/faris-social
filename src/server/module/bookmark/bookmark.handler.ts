@@ -2,6 +2,7 @@ import { prisma } from "@faris/server/db"
 import { type RemoveFromBookmark, type AddToBookmark, type GetOneUserBookmarkList } from "./bookmark.schema"
 import { globalSelectPost } from "../post/post.handler"
 import { TRPCError } from "@trpc/server"
+import { getCacheStrategy } from "../common/common.handler"
 
 export const AddToBookmarkHandler = async (params:AddToBookmark) => {
     const {postId,ownerId,isSharedPost} = params
@@ -73,6 +74,8 @@ export const getOneUserBookmarkHandler =async (params:GetOneUserBookmarkList) =>
             where:{
                 id:ownerId
             },
+            cacheStrategy:getCacheStrategy('post'),
+
             select:{
                 _count:{
                     select:{

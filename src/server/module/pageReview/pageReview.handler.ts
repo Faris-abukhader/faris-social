@@ -4,7 +4,7 @@ import { prisma } from "@faris/server/db"
 import { globalMinimumUserSelect } from "../profile/profile.handler"
 import { createNewNotificationHandler } from "../notification/notification.handler"
 import { NOTIFICATION_TYPE, SCORE_SYSTEM } from "../common/common.schema"
-import { scoreProcedure } from "../common/common.handler"
+import { getCacheStrategy, scoreProcedure } from "../common/common.handler"
 
 export const globelSelectPageReview = {
     id:true,
@@ -120,6 +120,7 @@ export const getOnePageReviewListHandler = async (params:GetOnePageReviewListPar
             where:{
                 id:pageId,  
             },
+            cacheStrategy:getCacheStrategy('page'),
             select:{
                 _count:{
                     select:{

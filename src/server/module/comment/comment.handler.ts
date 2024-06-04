@@ -5,6 +5,7 @@ import { globalReplySelect } from "../reply/reply.handler";
 import { globalMinimumUserSelect } from "../profile/profile.handler";
 import { createNewNotificationHandler } from "../notification/notification.handler";
 import { NOTIFICATION_TYPE } from "../common/common.schema";
+import { getCacheStrategy } from "../common/common.handler";
 
 
 export const globalSelectComment = (requesterId: string) => {
@@ -125,6 +126,7 @@ export const getOneCommentReplyListHandler = async (params: GetOneCommentReplyLi
             where: {
                 id
             },
+            cacheStrategy:getCacheStrategy('comment'),
             select: {
                 ...globalSelectComment(requesterId),
                 replyList:{

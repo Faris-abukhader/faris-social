@@ -4,6 +4,7 @@ import { prisma } from "@faris/server/db"
 import { drizzle } from "@faris/server/drizzle"
 import { birthday, friendship, image, user } from "drizzle/schema"
 import { eq, or } from "drizzle-orm"
+import { getCacheStrategy } from "../common/common.handler"
 
 // const _globelSelectBirthday = {
 //     id: user.id,
@@ -340,6 +341,7 @@ export const getTodaysFriendsBirthdayHandler = async (params: GetTodayFriendsBir
             where: {
                 id: userId
             },
+            cacheStrategy:getCacheStrategy('event'),
             select: {
                 friendList: {
                     where: {
@@ -380,7 +382,6 @@ export const getTodaysFriendsBirthdayHandler = async (params: GetTodayFriendsBir
                     }
                 },
             },
-            // cacheStrategy: { ttl: 60 },
         })
 
         const friends = [...users.friendList.map(usr => ({ user: usr.friend })), ...users.friendOf.map(usr => ({ user: usr.owner }))]
@@ -402,6 +403,7 @@ export const getTargetMonthFriendsBirthdayHandler = async (params: GetTargetMont
             where: {
                 id: userId
             },
+            cacheStrategy:getCacheStrategy('event'),
             select: {
                 friendList: {
                     where: {
@@ -458,6 +460,7 @@ export const getUpcomingFriendsBirthdayHandler = async (params: GetUpcomingFrien
             where: {
                 id: userId
             },
+            cacheStrategy:getCacheStrategy('event'),
             select: {
                 friendList: {
                     where: {
@@ -521,6 +524,7 @@ export const getNextMonthFriendsBirthdayHandler = async (params: GetTargetMonthF
             where: {
                 id: userId
             },
+            cacheStrategy:getCacheStrategy('event'),
             select: {
                 friendList: {
                     where: {

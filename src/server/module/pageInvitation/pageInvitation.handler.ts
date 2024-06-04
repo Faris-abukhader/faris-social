@@ -4,6 +4,7 @@ import { prisma } from "@faris/server/db"
 import { globalMinimumUserSelect } from "../profile/profile.handler"
 import { createNewNotificationHandler } from "../notification/notification.handler"
 import { NOTIFICATION_TYPE } from "../common/common.schema"
+import { getCacheStrategy } from "../common/common.handler"
 
 export const globelSelectPageInvitation = {
     id: true,
@@ -148,6 +149,7 @@ export const getOneUserPageInvitationList = async (params: GetOneUserInvitationL
             where: {
                 id: userId
             },
+            cacheStrategy:getCacheStrategy('user'),
             select: {
                 _count: {
                     select: {

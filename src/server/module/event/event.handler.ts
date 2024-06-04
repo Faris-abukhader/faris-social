@@ -4,7 +4,7 @@ import { prisma } from "@faris/server/db"
 import { getOneUserInterestedTopicHandler, globalMinimumUserSelect } from "../profile/profile.handler"
 import { createNewNotificationHandler } from "../notification/notification.handler"
 import { NOTIFICATION_TYPE, SCORE_SYSTEM } from "../common/common.schema"
-import { scoreProcedure } from "../common/common.handler"
+import { getCacheStrategy, scoreProcedure } from "../common/common.handler"
 
 export const globalSelectEvent = {
     id: true,
@@ -160,6 +160,7 @@ export const getOneUserEventListHandler = async (params: GetOneUserEventListRequ
             where: {
                 id: authorId,
             },
+            cacheStrategy:getCacheStrategy('event'),
             select: {
                 _count: {
                     select: {
@@ -237,6 +238,7 @@ export const getDiscoverEventListHandler = async (params: GetDiscoverEventList) 
 
         const data = await prisma.event.findMany({
             where: condition,
+            cacheStrategy:getCacheStrategy('event'),
             take: range,
             skip: page > 0 ? (+page - 1) * range : 0,
             select: globalSelectEvent
@@ -427,6 +429,7 @@ export const getOneUserEventInterestedInHandler = async (params: GetOneUserEvent
             where: {
                 id: userId
             },
+            cacheStrategy:getCacheStrategy('event'),
             select: {
                 _count: {
                     select: {
@@ -468,6 +471,7 @@ export const getOneUserEventGoingListHandler = async (params: GetOneUserEventLis
             where: {
                 id: userId
             },
+            cacheStrategy:getCacheStrategy('event'),
             select: {
                 _count: {
                     select: {
@@ -575,6 +579,7 @@ export const getOneCategoryEventListHandler = async (params: GetOneCategoryEvent
                 //     }
                 // }
             },
+            cacheStrategy:getCacheStrategy('event'),
             take: range,
             skip: page > 0 ? (+page - 1) * range : 0,
             select: {

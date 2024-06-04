@@ -5,7 +5,7 @@ import { globalSelectPost } from "../post/post.handler"
 import { getOneUserInterestedTopicHandler, globalMinimumUserSelect } from "../profile/profile.handler"
 import { createNewNotificationHandler } from "../notification/notification.handler"
 import { NOTIFICATION_TYPE, SCORE_SYSTEM } from "../common/common.schema"
-import { scoreProcedure } from "../common/common.handler"
+import { getCacheStrategy, scoreProcedure } from "../common/common.handler"
 import { type CreateNewPagePostParams } from "../post/post.schema"
 
 export const globalSelectMiniPage = {
@@ -180,6 +180,7 @@ export const getOneUserPagesListHandler = async (params: GetOneUserPagesList) =>
             where: {
                 id: userId
             },
+            cacheStrategy:getCacheStrategy('page'),
             select: {
                 _count: {
                     select: {
@@ -229,6 +230,7 @@ export const getOneUserRecommendedPageListHandler = async (params: GetOneUserRec
                 ...condition,
                 // and more conditions . . . 
             },
+            cacheStrategy:getCacheStrategy('page'),
             take: range,
             skip: page > 0 ? (+page - 1) * range : 0,
             select: globalSelectPage(userId),
@@ -252,6 +254,7 @@ export const getOneUserPageInvitationListHandler = async (params: GetOneUserPage
             where:{
                 id:userId
             },
+            cacheStrategy:getCacheStrategy('user'),
             select:{
                 _count:{
                     select:{
@@ -347,6 +350,7 @@ export const getOnePagePostListHandler = async (params: GetOnePagePostListParams
             where: {
                 id: pageId
             },
+            cacheStrategy:getCacheStrategy('post'),
             select: {
                 _count:{
                     select:{
@@ -461,6 +465,7 @@ export const getOneUserLikedPagesHandler =async (params:GetOneUserLikedPagesPara
             where:{
                 id:userId
             },
+            cacheStrategy:getCacheStrategy('page'),
             select:{
                 _count:{
                     select:{
@@ -529,6 +534,7 @@ export const getOnePageInvitationHandler =async (id:string) => {
             where:{
                 id
             },
+            cacheStrategy:getCacheStrategy('page'),
             select:{
                 id:true,
                 sender:{
@@ -608,6 +614,7 @@ export const getOnePagePhotoListHandler =async (params:GetOnePagePhotoListParams
             where:{
                 id
             },
+            cacheStrategy:getCacheStrategy('page'),
             select:{
                 _count:{
                     select:{
@@ -640,6 +647,7 @@ export const getOnePageFollowerListHandler =async (params:GetOnePageFollowerList
             where:{
                 id
             },
+            cacheStrategy:getCacheStrategy('page'),
             select:{
                 _count:{
                     select:{

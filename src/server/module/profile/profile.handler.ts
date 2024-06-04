@@ -7,7 +7,7 @@ import { globalSelectUserSession, updateSessionHandler } from "../auth/auth.hand
 // import { media, user } from "drizzle/schema"
 // import { eq, sql } from "drizzle-orm"
 import { type Prisma } from "@prisma/client"
-import { scoreProcedure } from "../common/common.handler"
+import { getCacheStrategy, scoreProcedure } from "../common/common.handler"
 import { SCORE_SYSTEM } from "../common/common.schema"
 
 export const userMutualFriendSelect = {
@@ -144,6 +144,7 @@ export const getOneProfileFriendListHandler = async (request: GetOneProfileFrien
             where: {
                 id
             },
+            cacheStrategy:getCacheStrategy('event'),
             select: {
                 _count: {
                     select: {
@@ -221,6 +222,7 @@ export const getOneProfilePhotoListHandler = async (request: GetOneProfileFriend
             where: {
                 id
             },
+            cacheStrategy:getCacheStrategy('event'),
             select: {
                 _count: {
                     select: {
@@ -258,6 +260,7 @@ export const getOneProfileCheckInListHandler = async (request: GetOneProfileFrie
                     userAuthorId: id
                 }
             },
+            cacheStrategy:getCacheStrategy('event'),
             select: {
                 id: true
             }
@@ -268,6 +271,7 @@ export const getOneProfileCheckInListHandler = async (request: GetOneProfileFrie
                     userAuthorId: id
                 }
             },
+            cacheStrategy:getCacheStrategy('event'),
             select: {
                 location: true,
                 createdAt: true,
@@ -521,6 +525,7 @@ export const searchFriendListHandler = async (params: SearchUserFriendQueryParam
             where,
             take: range,
             skip: page > 0 ? page * range : 0,
+            cacheStrategy:getCacheStrategy('user'),
             select: globalMinimumUserSelect
         })
 
@@ -693,6 +698,7 @@ export const getOneUserBlockedListHandler = async (params: GetOneUserBlockedList
             where: {
                 id
             },
+            cacheStrategy:getCacheStrategy('user'),
             select: {
                 _count: {
                     select: {
@@ -804,7 +810,9 @@ export const getOneUserInterestedTopicHandler =async (id:string) => {
         const interestedList = await prisma.user.findUniqueOrThrow({
             where:{
                 id,
-            },select:{
+            },
+            cacheStrategy:getCacheStrategy('event'),
+            select:{
                 interestedTopics:true
             }
         })

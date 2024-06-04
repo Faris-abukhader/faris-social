@@ -5,6 +5,7 @@ import { globalSelectPost } from "../post/post.handler";
 import { PAGINATION } from "../common/common.schema";
 import { drizzle } from "@faris/server/drizzle";
 import { sql } from "drizzle-orm";
+import { getCacheStrategy } from "../common/common.handler";
 
 export const globalSelectHashtag = {
     id:true,
@@ -53,6 +54,7 @@ export const getOneHashtagPostListHandler = async (params: GetHashtagPostListPar
             where: {
                 id
             },
+            cacheStrategy:getCacheStrategy('post'),
             select: {
                 ...globalSelectHashtag,
                 postList: {
@@ -118,6 +120,7 @@ export const getTredingHashtagHandler = async (params: GetTrendingHashtagParams)
                     lastUpdate: 'desc',
                 },
             ],
+            cacheStrategy:getCacheStrategy('event'),
             take: PAGINATION.MINI,
             select: globalSelectHashtag
         });

@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { type GetProfilePostListRequest, type CreateNewPost, type LikeOnePost, type GetPostCommentList, type ShareOnePost, type HideOnePostParams, type GetNewFeedPostListParams, type ForYouPostListParams, DeleteOnePostParams } from "./post.schema";
+import { type GetProfilePostListRequest, type CreateNewPost, type LikeOnePost, type GetPostCommentList, type ShareOnePost, type HideOnePostParams, type GetNewFeedPostListParams, type ForYouPostListParams, type DeleteOnePostParams } from "./post.schema";
 import { prisma } from "@faris/server/db";
 import { globalSelectComment } from "../comment/comment.handler";
 import { globalMinimumUserSelect } from "../profile/profile.handler";
@@ -7,7 +7,7 @@ import { globalSelectMiniPage } from "../page/page.handler";
 import { NOTIFICATION_TYPE, SCORE_SYSTEM } from "../common/common.schema";
 import { createNewNotificationHandler } from "../notification/notification.handler";
 import { getUserSessionAttributesHandler } from "../auth/auth.handler";
-import { scoreProcedure } from "../common/common.handler";
+import { getCacheStrategy, scoreProcedure } from "../common/common.handler";
 import { isAvailableForSendingFriendRequestHandler } from "../friendRequest/friendRequest.handler";
 
 export const globalSelectPost = (requesterId: string, isSharedPost = false) => {
@@ -257,10 +257,7 @@ export const getOneProfilePostListHandler = async (request: GetProfilePostListRe
             where: {
                 id
             },
-            cacheStrategy:{
-                ttl:60,
-                swr:60
-            },
+            cacheStrategy:getCacheStrategy('post'),
             select: {
                 _count: {
                     select: {
@@ -438,7 +435,12 @@ export const getOnePostCommentListHandler = async (params: GetPostCommentList) =
     const body = {
         where: {
             id
-        }, select: {
+        }, 
+        cacheStrategy:{
+            ttl:60,
+            swr:60
+        },
+        select: {
             id: true,
             _count: {
                 select: {
@@ -665,6 +667,7 @@ export const getNewFeedPostListHandler =async (params:GetNewFeedPostListParams) 
 
         const data = await prisma.post.findMany({
             where,
+            cacheStrategy:getCacheStrategy('post'),
             take:range,
             select:globalSelectPost(userId),
             skip:page>0?page*range:0,
@@ -745,6 +748,7 @@ export const forYouPostListHandler =async (params:ForYouPostListParams) => {
         // post nearby area has more change to appear to the target user
         const postList = await prisma.post.findMany({
             where,
+            cacheStrategy:getCacheStrategy('post'),
             take:range,
             skip:page>0?page*range:0,
             orderBy:[

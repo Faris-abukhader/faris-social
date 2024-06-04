@@ -4,7 +4,7 @@ import { prisma } from "@faris/server/db";
 import { globalMinimumUserSelect } from "../profile/profile.handler";
 import { createNewNotificationHandler } from "../notification/notification.handler";
 import { NOTIFICATION_TYPE, SCORE_SYSTEM } from "../common/common.schema";
-import { scoreProcedure } from "../common/common.handler";
+import { getCacheStrategy, scoreProcedure } from "../common/common.handler";
 
 type statusType = "available" | "pending" | "friend" | "responseOne"
 
@@ -104,6 +104,7 @@ export const getOneUserAllSendedFriendRequestsHandler =async (request:getFriendR
             where:{
                 senderId:id
             },
+            cacheStrategy:getCacheStrategy('user'),
         })
 
         const data = await prisma.addFriendRequest.findMany({
@@ -142,6 +143,7 @@ export const getOneUserAllRecievedFriendRequestsHandler = async (request:getFrie
         const data = await prisma.addFriendRequest.findMany({
             where,
             take:range,
+            cacheStrategy:getCacheStrategy('user'),
             skip:page>0 ? (+page-1)*range:0,
             select:{
                 id:true,

@@ -60,3 +60,50 @@ export const scoreProcedure = async (id:string,entity:Entity,score:number,proced
         throw new TRPCError({code:'INTERNAL_SERVER_ERROR'})
     }
 }
+
+
+export const getCacheStrategy = (entity:Entity)=>{
+
+    switch(entity){
+        case 'user':
+            return {
+                ttl:60,
+                swr:60
+            }
+        case 'comment':
+            return {
+                ttl:0,
+                swr:0
+            }        
+        case 'event':
+            return {
+                ttl:60 * 10, // 10 mins
+                swr:60 * 2
+            }       
+        case 'group':
+            return {
+                ttl:60 * 10, // 10 mins
+                swr:60 * 2
+            }        
+        case 'page':
+            return {
+                ttl:60 * 15, // 15 mins
+                swr:60 * 2
+            }  
+        case 'post':
+            return {
+                ttl:60 * 2, // 2 mins
+                swr:60 * 2
+            }         
+        case 'reply':
+            return {
+                ttl:60 * 2, // 2 mins
+                swr:60 * 2
+            }        
+        case 'story':
+            return {
+                ttl:60 , // 1 min
+                swr:60
+            }  
+    }
+}
