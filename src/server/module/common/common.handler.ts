@@ -67,8 +67,8 @@ export const getCacheStrategy = (entity:Entity)=>{
     switch(entity){
         case 'user':
             return {
-                ttl:60,
-                swr:60
+                ttl:0,
+                swr:0
             }
         case 'comment':
             return {

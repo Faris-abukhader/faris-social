@@ -257,7 +257,7 @@ export const getOneProfilePostListHandler = async (request: GetProfilePostListRe
             where: {
                 id
             },
-            cacheStrategy:getCacheStrategy('post'),
+            cacheStrategy:getCacheStrategy('user'),
             select: {
                 _count: {
                     select: {

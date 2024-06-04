@@ -180,7 +180,7 @@ export const getOneUserPagesListHandler = async (params: GetOneUserPagesList) =>
             where: {
                 id: userId
             },
-            cacheStrategy:getCacheStrategy('page'),
+            cacheStrategy:getCacheStrategy('user'),
             select: {
                 _count: {
                     select: {
