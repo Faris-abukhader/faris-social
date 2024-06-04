@@ -1,5 +1,3 @@
-import { env } from "@faris/env.mjs";
-
 type Authenticator = {
   signature: string;
   expire: number;
