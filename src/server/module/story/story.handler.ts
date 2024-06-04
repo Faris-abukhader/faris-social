@@ -124,6 +124,7 @@ export const getOneProfileStoriesHandler = async(params:GetOneProfileStoriesPara
         const where = {
             owner:{
                 OR:[
+                    {id:requesterId},
                     {
                         friendList:{
                             some:{

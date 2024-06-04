@@ -13,7 +13,7 @@ export default function ShareStory({type}:{type:'circle'|'square'}) {
     const {toast} = useToast()
     const {t} = useTranslation()
     const ownerId = useSessionStore(state=>state.user.id)
-    const {addStory,getCurrentStory} = useStoryGallary(state=>state)
+    const {addStory} = useStoryGallary(state=>state)
     const [img,setImg] = useState<ImageType>({path:'',url:'',thumbnailUrl:''})
     const {mutate,isLoading} = api.story.createNew.useMutation({
         onSuccess(data) {
@@ -23,8 +23,6 @@ export default function ShareStory({type}:{type:'circle'|'square'}) {
             })
         },
     })
-
-    if(!getCurrentStory()?.id)return
 
     const buttonRender = ()=>{
         if(type=='circle'){

@@ -22,7 +22,7 @@ export default function StoryBar({ profileId }: { profileId: string }) {
     loadFunction: loadData
   })
 
-  if (!isLoading && storyList.length == 0) return <></>
+  // if (!isLoading && storyList.length == 0) return <></>
 
   return (
     <Card className='w-full overflow-hidden px-2 py-4 border-0 border-b rounded-none'>

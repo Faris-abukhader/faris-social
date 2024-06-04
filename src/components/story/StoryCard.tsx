@@ -70,7 +70,7 @@ export default function StoryCard() {
         {getCurrentStory()?.owner.id == user.id &&<DeleteStoryDialog/>}
       </div>
       <div className='relative w-full flex-1 overflow-hidden h-full bg-transparent '>
-        <Media containerClassName='z-30' isToxic={getCurrentStory()?.media?.isToxic || true} src={getCurrentStory()?.media?.url ?? ''} className='w-full h-full object-cover'/>
+        <Media containerClassName='z-30' isToxic={getCurrentStory()?.media?.isToxic??false} src={getCurrentStory()?.media?.url ?? ''} className='w-full h-full object-cover'/>
         <div onClick={() => previousStory()} className='absolute top-0 left-0 w-1/2 bg-opacity-25 h-full z-20'></div>
         <div onClick={() => nextStory()} className='absolute top-0 right-0 w-1/2  bg-opacity-25 h-full z-20'></div>
         <Button disabled={isLoading} onClick={()=>mutate({userId:user.id,storyId:getCurrentStory()?.id??'',isLike:!getCurrentStory()?.isLiked})} variant={'ghost'} className='absolute right-3 bottom-3 z-40'>

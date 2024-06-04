@@ -37,6 +37,7 @@ model Example {
     updatedAt DateTime @updatedAt
 }
 
+
 model User {
     id                          String              @id @default(cuid())
     sessionId                   String              @default(cuid())

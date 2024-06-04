@@ -17,10 +17,12 @@ export default function BlockContainer() {
           alt="limit_exceeded_svg"
         />
         <h2 className="text-2xl font-bold">{t("rateLimitExceeded")}</h2>
-        <p className=" w-full max-w-md">{t("rateLimitDescription")}</p>
+        <p className=" w-full max-w-md pb-6">{t("rateLimitDescription")}</p>
+        <Link href={`/`}>
         <Button>
-          <Link href={`/`}>{t("goToHomePage")}</Link>
+          {t("goToHomePage")}
         </Button>
+        </Link>
       </div>
     </div>
   );
