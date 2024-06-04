@@ -30,6 +30,7 @@ export const messageRouter = router({
     .mutation(async ({ input }) => {
       const {conversationId,sender} = input
 
+      console.log({input})
       await pusherServer.trigger(toPusherKey(`conversation:${conversationId}`), Events.COMING_MESSAGES, input)
       await pusherServer.trigger(toPusherKey(`conversation:isTyping:${sender.id}`),Events.IS_TYPING,{userId:sender.fullName,isTyping:false})
 

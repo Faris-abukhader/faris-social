@@ -18,6 +18,7 @@ import ConversationHeader from './ConversationHeader'
 import { pageToUser } from './conversation/ContactCard'
 import { useQueryParam } from '@faris/hooks/useConversationParams'
 import {type  TGetMiniUser } from '@faris/server/module/profile/profile.handler'
+import { measureMemory } from 'vm'
 
 export default function MessageBox() {
   const [message, setMessage] = useState('')
@@ -27,7 +28,11 @@ export default function MessageBox() {
   const {setConversation,sendMessage,loadMessages,messageList,messageRange,currentMessagePage} = useCurrentConversationStore(state=>state)
   const { conversationId,conversationList, setMessageList,createConversation:createNewConversation } = useConversationListStore(state => state)
   const { data, isLoading } = api.message.getOneConversationMessageList.useQuery({ conversationId: currentConversation?.id ?? -1, page: currentMessagePage, range: messageRange }, { enabled: !!currentConversation })
-  const { mutateAsync, isLoading: isSending } = api.message.sendOneMessage.useMutation()
+  const { mutate:sendMessageMutation, isLoading: isSending } = api.message.sendOneMessage.useMutation({
+    onSettled() {
+        setMessage('')
+    }
+  })
   const { mutate: isWritingMutate } = api.message.isWriting.useMutation()
   const {value,set} = useQueryParam('conversation')
   const {value:contactId,remove} = useQueryParam('contactId')
@@ -80,9 +85,11 @@ export default function MessageBox() {
     setFunction: setMessageList
   })
 
-  const handleSendMessage = async () => {
+  const handleSendMessage = () => {
     if (!currentConversation?.id) return
-    await mutateAsync({
+    
+    console.log({message})
+    sendMessageMutation({
       content: message,
       conversationId: currentConversation.id,
       sender: {
@@ -90,12 +97,12 @@ export default function MessageBox() {
         fullName,
         image: {
           url: image ?? '',
-          thumbnailUrl: ''
+          thumbnailUrl: '......'
         } || null
       },
       account: 'user'
     });
-    setMessage('')
+
     return
   }
 
@@ -203,10 +210,10 @@ export default function MessageBox() {
       </ScrollArea>
       <div className='relative px-2 pb-3 border-t pt-2'>
         {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-        <form onSubmit={async (e) => {
+        <form onSubmit={(e) => {
           e.preventDefault();
 
-          await handleSendMessage();
+          handleSendMessage();
         }}>
           <Input value={message}
             onChange={(e) => { setMessage(e.target.value) }}

@@ -15,7 +15,6 @@ const SessionHelper = ()=> {
             }
         },
         onSuccess(data) {
-            console.log(data)
             setSession(data)
             setLanguage(data.platformLanguage)
         },
@@ -24,8 +23,6 @@ const SessionHelper = ()=> {
     useEffect(() => {
         if(dummy==-1)return
         const incrementInterval = 500; // Increment every 500ms
-
-        console.log('hello from session helper')
 
         const interval = setInterval(() => {
         if (!isReady) {
