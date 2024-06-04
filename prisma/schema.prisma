@@ -44,7 +44,7 @@ model User {
     username                    String              @default("") //@unique
     email                       String              @unique
     emailVerified               DateTime?
-    isVerified                  Boolean             @default(false)
+    isVerified                  Boolean             @default(true) // for test purpose it should be false
     password                    String              @default("")
     gettingStart                String              @default("1") @db.VarChar(1)
     gender                      String              @default("m") @db.VarChar(1)

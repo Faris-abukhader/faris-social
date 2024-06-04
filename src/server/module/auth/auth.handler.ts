@@ -237,7 +237,7 @@ export const signUpHandler = async (body: SignUpType) => {
     await prisma.user.create({
         data: {
             email: email.toLocaleLowerCase(),
-            password: hash
+            password: hash,
         }
     })
 

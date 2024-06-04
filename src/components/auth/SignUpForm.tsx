@@ -49,8 +49,8 @@ export default function SignUpForm() {
     <Card className="w-full sm:w-3/4 lg:w-1/2 p-4 space-y-4 py-8">
     <h1 className="text-xl font-bold text-center opacity-70 py-4">{t('welcomeToPlatform')}</h1>
       <p className="text-center text-sm opacity-70">{t('signInQuotation')}</p>
-      <Input value={credentials.email} onChange={(e) => SetCredentials((prevs) => ({ ...prevs, email: e.target.value }))} />
-      <Password value={credentials.password} onChange={(e) => SetCredentials((prevs) => ({ ...prevs, password: e.target.value }))}/>
+      <Input placeholder={t('emailPlaceHolder')} value={credentials.email} onChange={(e) => SetCredentials((prevs) => ({ ...prevs, email: e.target.value }))} />
+      <Password placeholder={t('passwordPlaceHolder')} value={credentials.password} onChange={(e) => SetCredentials((prevs) => ({ ...prevs, password: e.target.value }))}/>
       <p className="text-xs">{t('passwordNotice')}</p>
       <ReCAPTCHA
           sitekey={env.NEXT_PUBLIC_RECAPCHA_SITEKEY}
