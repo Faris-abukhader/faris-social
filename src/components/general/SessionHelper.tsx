@@ -8,6 +8,7 @@ const SessionHelper = ()=> {
     const { isReady, setSession } = useSessionStore(state => state)
     const setLanguage = useLocalizationStore(state=>state.setLanguage)
     const [dummy,setDummy] = useState(0)
+  
     const { mutate } = api.auth.getSession.useMutation({
         onError(error) {
             if(error){

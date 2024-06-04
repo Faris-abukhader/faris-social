@@ -14,7 +14,7 @@ const useColorSchemaStore = create<ColorSchemaType>((set,get) => ({
   setInitialColorSchema: () => {
     if(!window)return
     const colorStorage = window.localStorage.getItem('color-schema');
-    const browserColor = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    const browserColor = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark': 'light';
     const initialColorSchema = colorStorage?colorStorage:browserColor;
     
     // Use the setColorSchema function to set the color schema

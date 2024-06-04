@@ -43,33 +43,27 @@ export const ssrWrapper = async (ctx: GetServerSidePropsContext) => {
     console.log('zustand session is not exist')
     // if there is no session found in zustand session
     // getting session token from cache
-    try{
-      const cacheSession = await redis.get(session.user.sessionId) as string
 
-      // if the session cache is not found remove the local session and redirect to sign in page
-      if (!cacheSession) {
-        session.destroy()
-        throw new RedirectException('/auth/sign-in');
-      }
-  
-      // verifying session token and get session object form it
-      const userSession = JSON.parse(JSON.stringify(cacheSession)) as UserSession
-  
-      // assigning session to return it with props
-      sessionTemp = userSession
-      user.getState().setSession(sessionTemp)
-      localization.getState().setLanguage(sessionTemp.platformLanguage ?? locale)
-  
-  
-        // check if the user did not finish getting start steps then throw a redirect error
-        if (sessionTemp.gettingStart != 'c') {
-          throw new RedirectException(`/getting-start/${sessionTemp.gettingStart}`);
-        }
-    }catch(err){
+    const cacheSession = await redis.get(session.user.sessionId) as string
 
-      console.log(err)
-      console.log('redis error')
-     
+    // if the session cache is not found remove the local session and redirect to sign in page
+    if (!cacheSession) {
+      session.destroy()
+      throw new RedirectException('/auth/sign-in');
+    }
+
+    // verifying session token and get session object form it
+    const userSession = JSON.parse(JSON.stringify(cacheSession)) as UserSession
+
+    // assigning session to return it with props
+    sessionTemp = userSession
+    user.getState().setSession(sessionTemp)
+    localization.getState().setLanguage(sessionTemp.platformLanguage ?? locale)
+
+
+    // check if the user did not finish getting start steps then throw a redirect error
+    if (sessionTemp.gettingStart != 'c') {
+      throw new RedirectException(`/getting-start/${sessionTemp.gettingStart}`);
     }
 
   }

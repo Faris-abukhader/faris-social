@@ -3,8 +3,6 @@ import Router from "next/router";
 import NProgress from 'nprogress'
 import "@faris/styles/globals.css";
 import { useEffect } from "react";
-// import i18n from "localization/config";
-// import { I18nextProvider } from "next-i18next";
 import useColorSchemaStore from "zustandStore/colorSchemaStore";
 import { appWithTranslation } from 'next-i18next'
 
@@ -31,11 +29,8 @@ const MyApp = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [colorSchema]);
 
-  return (
-    // <I18nextProvider i18n={i18n}>
-      <Component {...pageProps} />
-    // </I18nextProvider>
-  );
+  return <Component {...pageProps} />
+   
 };
 
 const AppWrapper = appWithTranslation<TProps>(MyApp)

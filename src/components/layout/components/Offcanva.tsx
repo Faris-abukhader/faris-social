@@ -29,8 +29,6 @@ const Offcanva = ({type}:{type:string})=> {
     isReady && setList(helper(type ?? 'main'))
   }, [isReady, type])
 
-  console.log({type})
-
   return (
     <Sheet onOpenChange={toggle} open={open}>
       <SheetContent side={language=='ar'?'left':'right'} className='w-full sm:max-w-sm'>

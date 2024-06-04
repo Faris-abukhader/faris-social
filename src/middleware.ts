@@ -26,7 +26,6 @@ export async function middleware(req: NextRequest,res:NextResponse) {
     const { user } = session;
   
     if(!user)return NextResponse.redirect(new URL('/auth/sign-in', req.url))
-  
 
     const {success} = await ratelimit.limit(`mw_${user.sessionId}`)
 

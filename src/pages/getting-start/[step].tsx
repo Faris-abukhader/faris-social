@@ -1,5 +1,5 @@
 import { type GetServerSidePropsContext } from 'next'
-import {sessionObjectGenerator, type UserSession, type UserSessionAttributes} from '@faris/server/module/auth/auth.handler'
+import { type UserSession, type UserSessionAttributes} from '@faris/server/module/auth/auth.handler'
 import SessionSaver from '@faris/components/gettingStart/SessionSaver'
 
 import dynamic from 'next/dynamic'
@@ -46,26 +46,15 @@ export const getServerSideProps = async(ctx:GetServerSidePropsContext)=>{
 
 
   // getting iron session 
-  const session = await getIronSession(ctx.req,ctx.res,sessionOptions)
-
-  // if the client side session id expired redirect the user to sign in page
-  if(!session || !session.user){
-    return {
-      redirect: {
-        destination: '/auth/sign-in',
-        permanent: false
-      },
-      props: {}
-    }
-  }
+  const ironSession = await getIronSession(ctx.req,ctx.res,sessionOptions)
 
   // getting session token from cache
-  const cacheSession = await redis.get(session.user.sessionId) as string
+  const cacheSession = await redis.get(ironSession?.user?.sessionId??'-1') as string
 
   // if the session cache is not found remove the local session and redirect to sign in page
   if(!cacheSession){
 
-      session.destroy()
+    ironSession.destroy()
 
       return {
         redirect: {
@@ -101,9 +90,10 @@ if(step?.at(0) != userSession.gettingStart){
   }
 }
 
+
 return{
   props:{
-    session:sessionObjectGenerator(userSession),
+    session:userSession,
     step:String(step),
     ...(await serverSideTranslations(locale??'en')),
   }

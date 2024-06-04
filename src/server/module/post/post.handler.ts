@@ -94,7 +94,7 @@ export const createNewPostHandler = async (request: CreateNewPost) => {
     let toxicity = {is_toxic:false} 
     let isImageToxic = {result:false}
 
-    if(process.env.NODE_ENV !== "production"){
+    if(process.env.NODE_ENV !== "production" && process.env.NODE_ENV!=='development'){
     // getting the preduction of post language and toxicity
     const [ languageRequest,toxicityRequest,imageToxcityRequest ] =  await Promise.all([
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -483,7 +483,7 @@ export const shareOnePostHandler = async (params: ShareOnePost) => {
     let toxicity = {is_toxic:false} 
     let isImageToxic = {result:false}
 
-    if(process.env.NODE_ENV !== "production"){
+    if(process.env.NODE_ENV !== "production" && process.env.NODE_ENV!=='development'){
     // getting the preduction of post language and toxicity
     const [ languageRequest,toxicityRequest,imageToxcityRequest ] =  await Promise.all([
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

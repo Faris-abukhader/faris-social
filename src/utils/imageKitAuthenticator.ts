@@ -8,10 +8,10 @@ type Authenticator = {
 
 export const authenticator = async () => {
     console.log('hello from authenticator')
-    console.log(`${env.NEXT_PUBLIC_BASE_URL}/api/imageKit`)
+    console.log(`/api/imageKit`)
   try {
 
-    const response = await fetch(`${env.NEXT_PUBLIC_BASE_URL}/api/imageKit`);
+    const response = await fetch(`/api/imageKit`);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -30,3 +30,7 @@ export const authenticator = async () => {
     throw new Error(`Authentication request failed: ${JSON.stringify(error)}`);
   }
 };
+
+
+
+
