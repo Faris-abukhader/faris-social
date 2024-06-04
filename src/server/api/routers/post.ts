@@ -17,7 +17,10 @@ export const postRouter = router({
     .input(i => parse(getProfilePostListRequestSchema, i))
     .mutation(async ({ input }) => {
       console.log(input)
+      const start = performance.now()
       const postList = await getOneProfilePostListHandler(input)
+      const end = performance.now()
+      console.log(`total time taken to retrieve the post list of profile is ${(end-start)/1000}sec`)
       // await setTimeout(3000)
       return postList
     }),

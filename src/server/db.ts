@@ -1,12 +1,11 @@
-// import { PrismaClient } from "@prisma/client";
 import { PrismaClient } from '@prisma/client/edge'
 
 import { env } from "@faris/env.mjs";
 import { withAccelerate } from '@prisma/extension-accelerate'
 
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
-};
+// const globalForPrisma = globalThis as unknown as {
+//   prisma: PrismaClient | undefined;
+// };
 
 export const prisma = new PrismaClient({
   log:

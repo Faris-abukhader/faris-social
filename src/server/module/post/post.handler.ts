@@ -257,6 +257,10 @@ export const getOneProfilePostListHandler = async (request: GetProfilePostListRe
             where: {
                 id
             },
+            cacheStrategy:{
+                ttl:60,
+                swr:60
+            },
             select: {
                 _count: {
                     select: {
@@ -294,7 +298,9 @@ export const getOneProfilePostListHandler = async (request: GetProfilePostListRe
                         }
                     }
                 },
+                
             },
+        
         })
 
         const postListPageNumber = Math.ceil(data._count.postList / range);

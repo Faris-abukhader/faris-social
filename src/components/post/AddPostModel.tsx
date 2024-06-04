@@ -123,7 +123,7 @@ export function AddPostModel() {
         defaultValues: createNewPostInitialValues as CreateNewPost
     })
 
-    const { handleSubmit, getValues, setValue, trigger, formState: { } } = methods
+    const { handleSubmit, getValues, setValue, trigger, formState: { errors } } = methods
 
     useEffect(() => {
         void trigger()

@@ -24,7 +24,7 @@ const PhotoTab = ({ id }: PhotoTabProps)=> {
         skeletonComonent={<></>}
         noDataMessage={'noPhotoFoundForThisAccount'}
         nextPage={() => setCurrentPage(currentPage + 1)}
-        hasNextPage={data && data.pageNumber > 0?true:false}        
+        hasNextPage={data && data.pageNumber > 1?true:false}        
       >
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3'>
           {data && data.data && data?.data?.mediaList?.map((media, i) => <div key={i} className='border rounded-md shadow-sm w-fit' >

@@ -18,7 +18,7 @@ const FriendsTab = ({ id, friends }: FriendsTabProps)=> {
 
     return (
         <Card className='p-4'>
-            <h1 className='py-4 text-xl font-bold'>{t('friends')} {friends > 0 ? friends : ''}</h1>
+            <h1 className='py-4 text-xl font-bold'>{t('friends')} {friends > 0 ? `(${friends})` : ''}</h1>
             <ViewRender
                 illustrations='friends'
                 isGrid={true}
@@ -27,7 +27,7 @@ const FriendsTab = ({ id, friends }: FriendsTabProps)=> {
                 skeletonComonent={<FriendCardSkeleton />}
                 noDataMessage={'noFriendsFoundForThisAccount'}
                 nextPage={() => setCurrentPage(currentPage + 1)}
-                hasNextPage={data && data.pageNumber > 0?true:false}        
+                hasNextPage={data && data.pageNumber > 1?true:false}        
             >
                 <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
                     {data && data.data && data?.data?.friends?.map((friend, i) => <FriendCard key={i} {...friend} />)}

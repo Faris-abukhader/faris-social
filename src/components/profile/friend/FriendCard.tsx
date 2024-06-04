@@ -5,7 +5,7 @@ import { type TGetMiniUser } from '@faris/server/module/profile/profile.handler'
 
 const FriendCard = ({ id, image, fullName }: TGetMiniUser) => {
     return (
-        <div className='w-full'>
+        <div className='w-fit'>
             <Link key={id} href={`/profile/${id}`} className='group relative'>
                 <div className='absolute top-0 left-0 w-full h-full group-hover:bg-opacity-40 bg-black bg-opacity-0 transition-opacity ease-in-out duration-700'></div>
                 <Image src={image?.url ?? '/icons/profile.svg'} width={300} height={300} className='rounded-md w-40' alt='profile_avatar' />
